@@ -1,1 +1,44 @@
-Hello World
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE">
+    <title>Todo Manager App</title>
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="shortcut icon" href="favicon.ico">
+</head>
+<body>
+
+<canvas></canvas>
+<a class="source-link" href="https://github.com/mshushakov/todo-manager">Source Code</a>
+
+<!-- Templates: -->
+<script type="text/template" id="todo-template">
+    <div class="todo-controls">
+        <span class="timer">--:--</span>
+        <span class="icon-pause" title="pause"></span>
+        <span class="icon-resume" title="resume"></span>
+        <span class="icon-complete" title="complete"></span>
+    </div>
+	<div class="todo-title"><%= title %></div>
+    <textarea class="todo-input" disabled></textarea>
+</script>
+
+<!-- Libraries: -->
+<script type="text/javascript" src="js/libs/jquery.min.js"></script>
+<script type="text/javascript" src="js/libs/underscore.js"></script>
+<script type="text/javascript" src="js/libs/backbone.js"></script>
+<script type="text/javascript" src="js/libs/backbone.localStorage.min.js"></script>
+
+<!-- Application: -->
+<script type="text/javascript" src="js/models/todo.js"></script>
+<script type="text/javascript" src="js/collections/todos.js"></script>
+<script type="text/javascript" src="js/views/todo.js"></script>
+<script type="text/javascript" src="js/views/app.js"></script>
+
+<script type="text/javascript" src="js/app.js"></script>
+<script type="text/javascript" src="js/canvas.js"></script>
+
+</body>
+</html>
