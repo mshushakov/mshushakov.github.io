@@ -20,7 +20,7 @@
 
  <script type="text/javascript">
     function isImageLoaded(elem) {
-        //elem = $(elem);
+        if (!elem.jquery) elem = $(elem);
         if (elem.length) {
             elem = elem.get(0);
             alert(elem.naturalWidth);
