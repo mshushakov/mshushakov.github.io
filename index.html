@@ -23,7 +23,8 @@
         if (elem.jquery == 'undefined') elem = $(elem);
         if (elem.length) {
             elem = elem.get(0);
-            alert(elem.naturalWidth);
+            alert(elem.complete);
+            //alert(elem.naturalWidth);
             return typeof(elem.naturalWidth) != 'undefined' && elem.naturalWidth > 0;
         }
         return false;
