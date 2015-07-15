@@ -13,7 +13,7 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
     <img alt="Butterfly Pressure Cooker BPC-26A 8.5L"
-                         src="https://d2u5mj6wv6e3dc.cloudfront.net/p/butterfly-pressure-cooker-bpc-26a-8-5l-7448-840431-1-catalog.jpg"
+                         src="https://d2u5mj6wv6e3dc.cloudfront.net/p/butterfly-pressure-cooker-bpc-26a-8-5l-7448-840431-1-catalog.jpgggg"
                          height="160" width="160"
                          class="product-image"
                          data-placeholder="placeholder.jpg" />
@@ -34,6 +34,10 @@
         //alert(
             isImageLoaded($('[data-placeholder]'))
             //);
+
+        $('img[data-placeholder]').bind('error', function() {
+            console.log(this);
+        });
     })
  </script>
 
