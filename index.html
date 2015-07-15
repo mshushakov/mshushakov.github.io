@@ -10,8 +10,32 @@
 </head>
 <body>
 
-<canvas></canvas>
-<a class="source-link" href="https://github.com/mshushakov/todo-manager">Source Code</a>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+    <img alt="Butterfly Pressure Cooker BPC-26A 8.5L"
+                         src="https://d2u5mj6wv6e3dc.cloudfront.net/p/butterfly-pressure-cooker-bpc-26a-8-5l-7448-840431-1-catalog.jpg"
+                         height="160" width="160"
+                         class="product-image"
+                         data-placeholder="placeholder.jpg" />
+
+ <script type="text/javascript">
+    function isImageLoaded(elem) {
+        elem = $(elem);
+        if (elem.length) {
+            elem = elem.get(0);
+            alert(elem.naturalWidth);
+            return typeof(elem.naturalWidth) != 'undefined' && elem.naturalWidth > 0;
+        }
+        return false;
+    }
+
+    $(document).ready(function() {
+        alert(isImageLoaded($('[data-placeholder]')));
+    })
+ </script>
+
+<!-- <canvas></canvas>
+<a class="source-link" href="https://github.com/mshushakov/todo-manager">Source Code</a> -->
 
 <!-- Templates: -->
 <script type="text/template" id="todo-template">
@@ -26,19 +50,19 @@
 </script>
 
 <!-- Libraries: -->
-<script type="text/javascript" src="js/libs/jquery.min.js"></script>
+<!-- <script type="text/javascript" src="js/libs/jquery.min.js"></script>
 <script type="text/javascript" src="js/libs/underscore.js"></script>
 <script type="text/javascript" src="js/libs/backbone.js"></script>
-<script type="text/javascript" src="js/libs/backbone.localStorage.min.js"></script>
+<script type="text/javascript" src="js/libs/backbone.localStorage.min.js"></script> -->
 
 <!-- Application: -->
-<script type="text/javascript" src="js/models/todo.js"></script>
+<!-- <script type="text/javascript" src="js/models/todo.js"></script>
 <script type="text/javascript" src="js/collections/todos.js"></script>
 <script type="text/javascript" src="js/views/todo.js"></script>
 <script type="text/javascript" src="js/views/app.js"></script>
 
 <script type="text/javascript" src="js/app.js"></script>
-<script type="text/javascript" src="js/canvas.js"></script>
+<script type="text/javascript" src="js/canvas.js"></script> -->
 
 </body>
 </html>
