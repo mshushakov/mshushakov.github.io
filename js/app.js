@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "8632c43bb269aed4c946"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "76268a136579e7e141c5"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -601,34 +601,45 @@
 
 	var _componentsCardIndexJs2 = _interopRequireDefault(_componentsCardIndexJs);
 
-	/*class SVGDrawer {
-		constructor(svg) {
-			this.svg = svg;
-		}
-
-		drawCircle(x, y, r) {
-			var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-			circle.setAttribute("cx", x);
-	        circle.setAttribute("cy", y);
-	        circle.setAttribute("r", r);
-			this.svg.appendChild(circle);
-		}
-	}
-
-	window.SVGDrawer = SVGDrawer;*/
-	//document.body.classList.add('-debug-grid');
-
 	__webpack_require__(/*! ~/scss/app.scss */ 5);
 
 	if ((undefined) == 'development') __webpack_require__(/*! ~/scss/debug.scss */ 9);
 
-	var div = document.createElement('div');
-	div.innerHTML = new _componentsCardIndexJs2['default'](_api2['default'].getCard()).render();
-	document.body.appendChild(div);
+	var cards = _api2['default'].shuffle(_api2['default'].getPractice());
 
-	document.body.addEventListener('click', function (e) {
-		div.innerHTML = new _componentsCardIndexJs2['default'](_api2['default'].getCard()).render();
-	});
+	function nextCard() {
+		var card = new _componentsCardIndexJs2['default'](cards.pop());
+		document.body.insertBefore(card.render(), document.querySelector('.--archived'));
+
+		card.init();
+
+		if (!cards.length) {
+			cards = _api2['default'].shuffle(_api2['default'].getPractice());
+		}
+
+		document.documentElement.scrollTop = 0;
+	}
+
+	window.addEventListener('load', nextCard);
+	document.addEventListener('archived', nextCard);
+
+	//document.body.classList.add('-debug-grid');
+
+	/*
+	import { SVGShape, SVGStage, SVGCreator } from './svg-drawer.js';
+
+	document.body.appendChild(document.createElement('svg'));
+
+	var stage = new SVGStage(document.querySelector('svg'));
+	stage.add(SVGCreator.createPolygon({ points: [[50, 50], [50, 100], [100,100]] }));
+
+
+	window.requestAnimationFrame(render);
+
+	function render() {
+		stage.render();
+		window.requestAnimationFrame(render);
+	}*/
 
 /***/ },
 /* 2 */
@@ -708,6 +719,32 @@
 			title: '下手',
 			hiragana: 'へた',
 			translation: 'unskillful; poor; awkward'
+		}],
+
+		practice: [{
+			title: '７時１０分',
+			hiragana: 'しちじじゅっぷん',
+			translation: '7:10'
+		}, {
+			title: '４時３５分',
+			hiragana: 'よじさんじゅうごふん',
+			translation: '4:35'
+		}, {
+			title: '９時５０分',
+			hiragana: 'くじごじゅっぷん',
+			translation: '4:35'
+		}, {
+			title: '五十五分',
+			hiragana: 'ごじゅうごふん',
+			translation: '55 minutes'
+		}, {
+			title: '午後１２時半',
+			hiragana: 'ごごじゅうにじはん',
+			translation: '12:30 PM'
+		}, {
+			title: '午前６時',
+			hiragana: 'ごぜんろくじ',
+			translation: '6:00 AM'
 		}]
 	};
 
@@ -723,6 +760,36 @@
 			return cards.compounds.filter(function (item) {
 				return item.title.indexOf(kanji) > -1;
 			});
+		},
+
+		getPractice: function getPractice() {
+			var data = cards.practice.slice(0);
+			return data;
+		},
+
+		shuffle: function shuffle(array) {
+			var i = 0,
+			    j = 0,
+			    temp = null;
+
+			for (i = array.length - 1; i > 0; i -= 1) {
+				j = Math.floor(Math.random() * (i + 1));
+				temp = array[i];
+				array[i] = array[j];
+				array[j] = temp;
+			}
+
+			/*while (0 !== currentIndex) {
+	  		// Pick a remaining element...
+	  	randomIndex = Math.floor(Math.random() * currentIndex);
+	  	currentIndex -= 1;
+	  		// And swap it with the current element.
+	  	temporaryValue = array[currentIndex];
+	  	array[currentIndex] = array[randomIndex];
+	  	array[randomIndex] = temporaryValue;
+	  }*/
+
+			return array;
 		}
 	};
 	module.exports = exports['default'];
@@ -782,7 +849,7 @@
 /*!******************************************!*\
   !*** ./sources/components/card/index.js ***!
   \******************************************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	'use strict';
 
@@ -792,29 +859,63 @@
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	var _utilsTemplater = __webpack_require__(/*! ~/utils/templater */ 3);
-
-	var _utilsTemplater2 = _interopRequireDefault(_utilsTemplater);
 
 	var Card = (function () {
 	    function Card(data) {
 	        _classCallCheck(this, Card);
 
-	        this.data = data;
+	        this.data = data || {};
 
-	        this.data.examples = this.data.compounds.map(function (item) {
-	            return item.title + ' 【' + item.hiragana + '】 ' + item.translation;
-	        }).join('<br>');
+	        /*this.data.examples = this.data.compounds.map((item) => {
+	            return `${item.title} 【${item.hiragana}】 ${item.translation}`;
+	        }).join('<br>');*/
+
+	        this.question = this.data.title;
+	        this.answer = this.data.hiragana;
+	        this.hint = this.data.translation;
+
+	        this.element = document.createElement('div');
 	    }
 
 	    _createClass(Card, [{
+	        key: 'init',
+	        value: function init() {
+	            var _this = this;
+
+	            var input = this.element.querySelector('[data-ref="input"]'),
+	                answer = this.element.querySelector('[data-ref="answer"]');
+
+	            this.element.querySelector('[data-ref="input"] input').focus();
+
+	            input.addEventListener('submit', function (e) {
+	                e.preventDefault();
+
+	                if (_this.check()) {
+	                    answer.classList.add('--answered');
+	                    input.classList.add('--correct');
+	                } else {
+	                    answer.classList.add('--answered');
+	                    input.classList.add('--incorrect');
+	                }
+
+	                _this.element.classList.add('--archived');
+	                _this.element.querySelector('[data-ref="input"] input').disabled = true;
+
+	                _this.element.dispatchEvent(new Event('archived', { bubbles: true }));
+	            }, true);
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
-	            return '<div class="card">\n                <div class="card__header">\n                    <div class="card__caption">Radical: ' + this.data.radical + '</div>\n                    <div class="card__title">' + this.data.kanji + '</div>\n                </div>\n                <div class="card__content">\n                    <div class="card__headline">' + this.data.hiragana + '</div>\n                    <div class="card__subheading">' + this.data.translation + '</div>\n                    <div class="card__description">\n                        <div class="card__caption">Compounds:</div>\n                        ' + this.data.examples + '\n                    </div>\n                </div>\n            </div>';
+	            this.element.innerHTML = '<div class="card --practice">\n                <div class="card__header">\n                    <div class="card__caption">' + this.hint + '</div>\n                    <div class="card__title">' + this.question + '</div>\n                </div>\n                <div class="card__content">\n                    <div class="card__answer" data-ref="answer">' + this.answer + '</div>\n                    <form class="card__input" data-ref="input"><input type="text"></form>\n                </div>\n            </div>';
+
+	            return this.element;
+	        }
+	    }, {
+	        key: 'check',
+	        value: function check() {
+	            return this.element.querySelector('[data-ref="input"] input').value.trim() === this.answer;
 	        }
 	    }]);
 
