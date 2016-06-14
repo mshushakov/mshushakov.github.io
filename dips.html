@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Dips</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="css/styles.css">
+        <link href='https://fonts.googleapis.com/css?family=Noto+Sans:400,700' rel='stylesheet' type='text/css'>
+    </head>
+    <body>
+
+        <style>
+            .dips {
+                margin-bottom: 10px;
+                padding: 0 10px;
+            }
+
+            .history {
+                border-bottom: 1px solid #ccc;
+            }
+
+            .history__item {
+                border-top: 1px solid #ccc;
+                padding: 10px;
+                font-size: 14px;
+                color: rgba(0,0,0,.87);
+            }
+        </style>
+
+        <form class="dips">
+            <input type="text" placeholder="How many dips today?" pattern="(\d|,)+" required>
+        </form>
+
+        <div class="history"></div>
+
+        <script type="application/javascript">
+            var storage = window.localStorage,
+                data = storage.getItem(window.location.hostname + '_dips'),
+                container = document.querySelector('.history'),
+                form = document.querySelector('.dips');
+
+            if (data) {
+                data = JSON.parse(data);
+                data.forEach(addItem);
+            }
+            else {
+                data = [];
+            }
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                var dips = form.querySelector('input').value.trim();
+                if (dips) {
+                    data.push({ time: Date.now(), dips: dips });
+                    storage.setItem(window.location.hostname + '_dips', JSON.stringify(data));
+                }
+                console.log(data);
+
+                addItem(data[data.length - 1]);
+            });
+
+            form.querySelector('input').focus();
+
+            function addItem(item) {
+                var date = new Date(item.time),
+                    element = document.createElement('div');
+
+                element.classList.add('history__item');
+                element.textContent = `${date.getDate()}/${date.getMonth() + 1} : ${item.dips}`;
+
+                container.appendChild(element);
+            }
+        </script>
+    </body>
+</html>
