@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "76268a136579e7e141c5"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "932e6cd245afc8b80caf"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -589,39 +589,45 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _api = __webpack_require__(/*! ~/api */ 2);
+	var _componentsCard = __webpack_require__(/*! ~/components/card/ */ 2);
 
-	var _api2 = _interopRequireDefault(_api);
+	var _componentsCard2 = _interopRequireDefault(_componentsCard);
 
-	var _utilsTemplater = __webpack_require__(/*! ~/utils/templater */ 3);
+	var _componentsCardControllersPractice = __webpack_require__(/*! ~/components/card/controllers/practice */ 3);
 
-	var _utilsTemplater2 = _interopRequireDefault(_utilsTemplater);
+	var _componentsCardControllersPractice2 = _interopRequireDefault(_componentsCardControllersPractice);
 
-	var _componentsCardIndexJs = __webpack_require__(/*! ~/components/card/index.js */ 4);
+	var _coreApi = __webpack_require__(/*! ~/core/api */ 4);
 
-	var _componentsCardIndexJs2 = _interopRequireDefault(_componentsCardIndexJs);
+	var _coreApi2 = _interopRequireDefault(_coreApi);
 
 	__webpack_require__(/*! ~/scss/app.scss */ 5);
 
-	if ((undefined) == 'development') __webpack_require__(/*! ~/scss/debug.scss */ 9);
+	if ((undefined) == 'development') __webpack_require__(/*! ~/scss/_debug.scss */ 9);
 
-	var cards = _api2['default'].shuffle(_api2['default'].getPractice());
+	var cards = _coreApi2['default'].shuffle(_coreApi2['default'].getPractice());
 
 	function nextCard() {
-		var card = new _componentsCardIndexJs2['default'](cards.pop());
-		document.body.insertBefore(card.render(), document.querySelector('.--archived'));
+		Array.forEach.call(null, document.querySelectorAll('.card'), function (item) {
+			item.classList.add('--hide');
+		});
 
-		card.init();
+		var card = new _componentsCard2['default']({ data: cards.pop(), controller: _componentsCardControllersPractice2['default'] });
+		//document.body.insertBefore(card, document.querySelector('.--archived'));
+
+		document.body.appendChild(card);
 
 		if (!cards.length) {
-			cards = _api2['default'].shuffle(_api2['default'].getPractice());
+			cards = _coreApi2['default'].shuffle(_coreApi2['default'].getPractice());
 		}
 
 		document.documentElement.scrollTop = 0;
 	}
 
 	window.addEventListener('load', nextCard);
-	document.addEventListener('archived', nextCard);
+	window.addEventListener('click', nextCard);
+
+	//document.addEventListener('archived', nextCard);
 
 	//document.body.classList.add('-debug-grid');
 
@@ -643,9 +649,80 @@
 
 /***/ },
 /* 2 */
-/*!************************!*\
-  !*** ./sources/api.js ***!
-  \************************/
+/*!******************************************!*\
+  !*** ./sources/components/card/index.js ***!
+  \******************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	var Card = (function () {
+	    function Card(_ref) {
+	        var data = _ref.data;
+	        var controller = _ref.controller;
+
+	        _classCallCheck(this, Card);
+
+	        Object.assign(this, controller);
+	        this.data = data;
+
+	        return this.init();
+	    }
+
+	    _createClass(Card, [{
+	        key: 'render',
+	        value: function render() {
+	            var element = document.createElement('div');
+	            element.innerHTML = '<div class="card --' + this.data.type + '">\n                <div class="card__header">\n                    <div class="card__caption">' + this.data.caption + '</div>\n                    <div class="card__title">' + this.data.title + '</div>\n                </div>\n                <div class="card__content">\n                    ' + this.data.content + '\n                </div>\n            </div>';
+
+	            return element.children[0];
+	        }
+	    }]);
+
+	    return Card;
+	})();
+
+	exports['default'] = Card;
+	module.exports = exports['default'];
+
+/***/ },
+/* 3 */
+/*!*********************************************************!*\
+  !*** ./sources/components/card/controllers/practice.js ***!
+  \*********************************************************/
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports["default"] = {
+	    init: function init() {
+	        this.element = this.render();
+
+	        //this.element.addEventListener('click', () => {
+	        responsiveVoice.speak(this.data.title, "Japanese Female");
+	        //});
+
+	        return this.element;
+	    }
+	};
+	module.exports = exports["default"];
+
+/***/ },
+/* 4 */
+/*!*****************************!*\
+  !*** ./sources/core/api.js ***!
+  \*****************************/
 /***/ function(module, exports) {
 
 	'use strict';
@@ -722,29 +799,33 @@
 		}],
 
 		practice: [{
-			title: '７時１０分',
-			hiragana: 'しちじじゅっぷん',
-			translation: '7:10'
+			title: '日曜日',
+			caption: 'にちようび',
+			content: 'Sunday (day of the sun)'
 		}, {
-			title: '４時３５分',
-			hiragana: 'よじさんじゅうごふん',
-			translation: '4:35'
+			title: '月曜日',
+			caption: 'げつようび',
+			content: 'Monday (day of the moon)'
 		}, {
-			title: '９時５０分',
-			hiragana: 'くじごじゅっぷん',
-			translation: '4:35'
+			title: '火曜日',
+			caption: 'かようび',
+			content: 'Tuesday (day of fire)'
 		}, {
-			title: '五十五分',
-			hiragana: 'ごじゅうごふん',
-			translation: '55 minutes'
+			title: '水曜日',
+			caption: 'すいようび',
+			content: 'Wednesday (day of water)'
 		}, {
-			title: '午後１２時半',
-			hiragana: 'ごごじゅうにじはん',
-			translation: '12:30 PM'
+			title: '木曜日',
+			caption: 'もくようび',
+			content: 'Thursday (day of wood)'
 		}, {
-			title: '午前６時',
-			hiragana: 'ごぜんろくじ',
-			translation: '6:00 AM'
+			title: '金曜日',
+			caption: 'きんようび',
+			content: 'Friday (day of metal)'
+		}, {
+			title: '土曜日',
+			caption: 'どようび',
+			content: 'Saturday (day of soil)'
 		}]
 	};
 
@@ -795,137 +876,6 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 3 */
-/*!************************************!*\
-  !*** ./sources/utils/templater.js ***!
-  \************************************/
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	    value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	var Templater = (function () {
-	    function Templater() {
-	        _classCallCheck(this, Templater);
-	    }
-
-	    _createClass(Templater, null, [{
-	        key: 'render',
-	        value: function render(template, data) {
-	            var fragment = document.createElement('div');
-	            fragment.innerHTML = _render(template, data);
-
-	            return fragment;
-	        }
-	    }]);
-
-	    return Templater;
-	})();
-
-	exports['default'] = Templater;
-
-	function _render(template, data) {
-	    if (!data) {
-	        return template;
-	    }
-
-	    for (var item in data) {
-	        var re = '{{' + item + '}}';
-	        template = template.replace(new RegExp(re, 'ig'), data[item]);
-	    }
-	    return template;
-	}
-	module.exports = exports['default'];
-
-/***/ },
-/* 4 */
-/*!******************************************!*\
-  !*** ./sources/components/card/index.js ***!
-  \******************************************/
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	    value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	var Card = (function () {
-	    function Card(data) {
-	        _classCallCheck(this, Card);
-
-	        this.data = data || {};
-
-	        /*this.data.examples = this.data.compounds.map((item) => {
-	            return `${item.title} 【${item.hiragana}】 ${item.translation}`;
-	        }).join('<br>');*/
-
-	        this.question = this.data.title;
-	        this.answer = this.data.hiragana;
-	        this.hint = this.data.translation;
-
-	        this.element = document.createElement('div');
-	    }
-
-	    _createClass(Card, [{
-	        key: 'init',
-	        value: function init() {
-	            var _this = this;
-
-	            var input = this.element.querySelector('[data-ref="input"]'),
-	                answer = this.element.querySelector('[data-ref="answer"]');
-
-	            this.element.querySelector('[data-ref="input"] input').focus();
-
-	            input.addEventListener('submit', function (e) {
-	                e.preventDefault();
-
-	                if (_this.check()) {
-	                    answer.classList.add('--answered');
-	                    input.classList.add('--correct');
-	                } else {
-	                    answer.classList.add('--answered');
-	                    input.classList.add('--incorrect');
-	                }
-
-	                _this.element.classList.add('--archived');
-	                _this.element.querySelector('[data-ref="input"] input').disabled = true;
-
-	                _this.element.dispatchEvent(new Event('archived', { bubbles: true }));
-	            }, true);
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            this.element.innerHTML = '<div class="card --practice">\n                <div class="card__header">\n                    <div class="card__caption">' + this.hint + '</div>\n                    <div class="card__title">' + this.question + '</div>\n                </div>\n                <div class="card__content">\n                    <div class="card__answer" data-ref="answer">' + this.answer + '</div>\n                    <form class="card__input" data-ref="input"><input type="text"></form>\n                </div>\n            </div>';
-
-	            return this.element;
-	        }
-	    }, {
-	        key: 'check',
-	        value: function check() {
-	            return this.element.querySelector('[data-ref="input"] input').value.trim() === this.answer;
-	        }
-	    }]);
-
-	    return Card;
-	})();
-
-	exports['default'] = Card;
-	module.exports = exports['default'];
-
-/***/ },
 /* 5 */
 /*!*******************************!*\
   !*** ./sources/scss/app.scss ***!
@@ -939,9 +889,9 @@
 /* 7 */,
 /* 8 */,
 /* 9 */
-/*!*********************************!*\
-  !*** ./sources/scss/debug.scss ***!
-  \*********************************/
+/*!**********************************!*\
+  !*** ./sources/scss/_debug.scss ***!
+  \**********************************/
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
