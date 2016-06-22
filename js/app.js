@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "932e6cd245afc8b80caf"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "561e706d671bbbd441eb"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -608,9 +608,11 @@
 	var cards = _coreApi2['default'].shuffle(_coreApi2['default'].getPractice());
 
 	function nextCard() {
-		Array.forEach.call(null, document.querySelectorAll('.card'), function (item) {
-			item.classList.add('--hide');
-		});
+		var prev = document.querySelectorAll('.card');
+
+		if (prev.length) {
+			prev[prev.length - 1].classList.add('--hide');
+		}
 
 		var card = new _componentsCard2['default']({ data: cards.pop(), controller: _componentsCardControllersPractice2['default'] });
 		//document.body.insertBefore(card, document.querySelector('.--archived'));
