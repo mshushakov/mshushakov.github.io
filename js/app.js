@@ -53,8 +53,19 @@
 
 /******/ 	
 /******/ 	
+/******/ 	// Copied from https://github.com/facebook/react/blob/bef45b0/src/shared/utils/canDefineProperty.js
+/******/ 	var canDefineProperty = false;
+/******/ 	try {
+/******/ 		Object.defineProperty({}, "x", {
+/******/ 			get: function() {}
+/******/ 		});
+/******/ 		canDefineProperty = true;
+/******/ 	} catch(x) {
+/******/ 		// IE will fail on defineProperty
+/******/ 	}
+/******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "561e706d671bbbd441eb"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "7b8b79aeb041cc576b03"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -77,7 +88,7 @@
 /******/ 		};
 /******/ 		for(var name in __webpack_require__) {
 /******/ 			if(Object.prototype.hasOwnProperty.call(__webpack_require__, name)) {
-/******/ 				if(Object.defineProperty) {
+/******/ 				if(canDefineProperty) {
 /******/ 					Object.defineProperty(fn, name, (function(name) {
 /******/ 						return {
 /******/ 							configurable: true,
@@ -120,7 +131,7 @@
 /******/ 				}
 /******/ 			});
 /******/ 		}
-/******/ 		if(Object.defineProperty) {
+/******/ 		if(canDefineProperty) {
 /******/ 			Object.defineProperty(fn, "e", {
 /******/ 				enumerable: true,
 /******/ 				value: ensure
@@ -585,315 +596,314 @@
   \************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	var _store = __webpack_require__(/*! tools/store */ 2);
 
-	var _componentsCard = __webpack_require__(/*! ~/components/card/ */ 2);
+	var _store2 = _interopRequireDefault(_store);
 
-	var _componentsCard2 = _interopRequireDefault(_componentsCard);
+	var _component = __webpack_require__(/*! tools/component */ 3);
 
-	var _componentsCardControllersPractice = __webpack_require__(/*! ~/components/card/controllers/practice */ 3);
+	var _component2 = _interopRequireDefault(_component);
 
-	var _componentsCardControllersPractice2 = _interopRequireDefault(_componentsCardControllersPractice);
+	var _db = __webpack_require__(/*! core/db */ 4);
 
-	var _coreApi = __webpack_require__(/*! ~/core/api */ 4);
+	var _db2 = _interopRequireDefault(_db);
 
-	var _coreApi2 = _interopRequireDefault(_coreApi);
+	var _card = __webpack_require__(/*! components/card */ 5);
 
-	__webpack_require__(/*! ~/scss/app.scss */ 5);
+	var _card2 = _interopRequireDefault(_card);
 
-	if ((undefined) == 'development') __webpack_require__(/*! ~/scss/_debug.scss */ 9);
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var cards = _coreApi2['default'].shuffle(_coreApi2['default'].getPractice());
+	__webpack_require__(/*! scss/app.scss */ 6);
 
-	function nextCard() {
-		var prev = document.querySelectorAll('.card');
+	//if (NODE_ENV == 'development') require('scss/_debug.scss');
 
-		if (prev.length) {
-			prev[prev.length - 1].classList.add('--hide');
-		}
+	_db2.default.open().then(function () {
+		_db2.default.get('cards').then(function (data) {
+			return data.forEach(function (data, index) {
+				var card = new _card2.default(null, data);
+				_component2.default.render(card, document.body.querySelector('.list'));
 
-		var card = new _componentsCard2['default']({ data: cards.pop(), controller: _componentsCardControllersPractice2['default'] });
-		//document.body.insertBefore(card, document.querySelector('.--archived'));
-
-		document.body.appendChild(card);
-
-		if (!cards.length) {
-			cards = _coreApi2['default'].shuffle(_coreApi2['default'].getPractice());
-		}
-
-		document.documentElement.scrollTop = 0;
-	}
-
-	window.addEventListener('load', nextCard);
-	window.addEventListener('click', nextCard);
-
-	//document.addEventListener('archived', nextCard);
-
-	//document.body.classList.add('-debug-grid');
-
-	/*
-	import { SVGShape, SVGStage, SVGCreator } from './svg-drawer.js';
-
-	document.body.appendChild(document.createElement('svg'));
-
-	var stage = new SVGStage(document.querySelector('svg'));
-	stage.add(SVGCreator.createPolygon({ points: [[50, 50], [50, 100], [100,100]] }));
-
-
-	window.requestAnimationFrame(render);
-
-	function render() {
-		stage.render();
-		window.requestAnimationFrame(render);
-	}*/
+				card.style.opacity = 0;
+				card.animate([{ transform: 'translateY(100px)', opacity: 0 }, { transform: 'translateY(0)', opacity: 1 }], {
+					delay: index * 100,
+					duration: 200,
+					fill: 'forwards'
+				});
+			});
+		});
+	});
 
 /***/ },
 /* 2 */
-/*!******************************************!*\
-  !*** ./sources/components/card/index.js ***!
-  \******************************************/
+/*!********************************!*\
+  !*** ./sources/tools/store.js ***!
+  \********************************/
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = Store;
+	function Store(data) {
+		var actions = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+		var _state = data;
+		var _actions = actions;
+		var _subscribers = {};
+
+		return {
+			get state() {
+				return Array.isArray(_state) ? _state.slice() : Object.assign({}, _state);
+			},
+
+			dispatch: function dispatch(type, data) {
+				var result = null;
+
+				if (_actions[type]) {
+					result = Promise.resolve(_actions[type](_state, data));
+				} else {
+					console.warn("Action " + type + " does not exist");
+				}
+
+				if (_subscribers[type] && result) {
+					_subscribers[type].forEach(function (subscriber) {
+						result.then(subscriber.update).catch(function (error) {
+							return console.error(error);
+						});
+					});
+				}
+			},
+			subscribe: function subscribe(type, callback) {
+				if (!_subscribers[type]) _subscribers[type] = [];
+				_subscribers[type].push({ update: callback });
+			},
+			unsubscribe: function unsubscribe() {
+				//_subscribers
+			}
+		};
+	};
+
+/***/ },
+/* 3 */
+/*!************************************!*\
+  !*** ./sources/tools/component.js ***!
+  \************************************/
 /***/ function(module, exports) {
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
 
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var Card = (function () {
-	    function Card(_ref) {
-	        var data = _ref.data;
-	        var controller = _ref.controller;
+	var Component = function () {
+	    function Component(store) {
+	        var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+	        var extend = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
 
-	        _classCallCheck(this, Card);
+	        _classCallCheck(this, Component);
 
-	        Object.assign(this, controller);
+	        Object.assign(this, extend);
+	        this.store = store;
 	        this.data = data;
 
-	        return this.init();
+	        this.element = Component.render(this.render());
+	        this.element = this.element.children.item(0);
+
+	        this.init();
+
+	        return this.element;
 	    }
 
-	    _createClass(Card, [{
+	    _createClass(Component, [{
+	        key: 'init',
+	        value: function init() {
+	            console.warn('invoked abstract Component.init method');
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var element = document.createElement('div');
-	            element.innerHTML = '<div class="card --' + this.data.type + '">\n                <div class="card__header">\n                    <div class="card__caption">' + this.data.caption + '</div>\n                    <div class="card__title">' + this.data.title + '</div>\n                </div>\n                <div class="card__content">\n                    ' + this.data.content + '\n                </div>\n            </div>';
+	            console.warn('invoked abstract Component.render method');
+	            return '<div>Empty component</div>';
+	        }
+	    }], [{
+	        key: 'render',
+	        value: function render(component) {
+	            var element = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
-	            return element.children[0];
+	            if (typeof component !== 'string') {
+	                if (element) element.appendChild(component);
+	                return element || component;
+	            } else {
+	                var fragment = document.createDocumentFragment();
+	                var temp = document.createElement('div');
+
+	                temp.innerHTML = component;
+
+	                while (temp.children.item(0)) {
+	                    fragment.appendChild(temp.children.item(0));
+	                };
+
+	                if (element) element.appendChild(fragment);
+
+	                return element || fragment;
+	            }
 	        }
 	    }]);
 
-	    return Card;
-	})();
+	    return Component;
+	}();
 
-	exports['default'] = Card;
-	module.exports = exports['default'];
+	exports.default = Component;
 
 /***/ },
-/* 3 */
-/*!*********************************************************!*\
-  !*** ./sources/components/card/controllers/practice.js ***!
-  \*********************************************************/
+/* 4 */
+/*!****************************!*\
+  !*** ./sources/core/db.js ***!
+  \****************************/
 /***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var db;
+
+	var DB = function () {
+	    function DB() {
+	        _classCallCheck(this, DB);
+	    }
+
+	    _createClass(DB, null, [{
+	        key: 'open',
+	        value: function open() {
+	            var request = indexedDB.open('cards', 2);
+
+	            var promise = new Promise(function (resolve, reject) {
+	                request.onsuccess = function (event) {
+	                    db = event.target.result;
+	                    resolve(event.target.result);
+	                };
+	                request.onerror = function (event) {
+	                    reject(new Error(request.error));
+	                };
+	            });
+
+	            request.onupgradeneeded = function (event) {
+	                db = event.target.result;
+	                var store = db.createObjectStore('cards', { autoIncrement: true });
+	                store.add({ word: '上', reading: 'うえ', meaning: 'above; up; over; top', example: '本は机の上です' });
+	                store.add({ word: '下', reading: 'した', meaning: 'below; down; under; bottom', example: '猫は机の下です' });
+	                store.add({ word: '前', reading: 'まえ', meaning: 'in front (of); before', example: 'あの人はあの家の前です。' });
+	                store.add({ word: '後ろ', reading: 'うしろ', meaning: 'back; behind', example: '私の家の後ろです。' });
+	            };
+
+	            return promise;
+	        }
+	    }, {
+	        key: 'get',
+	        value: function get(store) {
+	            var key = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+
+	            var transaction = db.transaction(['cards'], 'readwrite');
+	            var store = transaction.objectStore(store);
+	            var promise = new Promise(function (resolve, reject) {
+	                //transaction = (key) ? store.get(key) : store.getALL();
+	                transaction.objectStore('cards').getAll().onsuccess = function (event) {
+	                    return resolve(event.target.result);
+	                };
+	                //transaction.onerror = (event) => reject(new Error(transaction.error));
+	                db.close();
+	            });
+
+	            return promise;
+	        }
+	    }]);
+
+	    return DB;
+	}();
+
+	exports.default = DB;
+
+/***/ },
+/* 5 */
+/*!************************************!*\
+  !*** ./sources/components/card.js ***!
+  \************************************/
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports["default"] = {
-	    init: function init() {
-	        this.element = this.render();
 
-	        //this.element.addEventListener('click', () => {
-	        responsiveVoice.speak(this.data.title, "Japanese Female");
-	        //});
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	        return this.element;
+	var _component = __webpack_require__(/*! tools/component */ 3);
+
+	var _component2 = _interopRequireDefault(_component);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Card = function (_Component) {
+	    _inherits(Card, _Component);
+
+	    function Card() {
+	        var _Object$getPrototypeO;
+
+	        var _this, _ret;
+
+	        _classCallCheck(this, Card);
+
+	        for (var _len = arguments.length, data = Array(_len), _key = 0; _key < _len; _key++) {
+	            data[_key] = arguments[_key];
+	        }
+
+	        return _ret = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Card)).call.apply(_Object$getPrototypeO, [this].concat(data))), _this), _possibleConstructorReturn(_this, _ret);
 	    }
-	};
-	module.exports = exports["default"];
+
+	    _createClass(Card, [{
+	        key: "init",
+	        value: function init() {}
+	    }, {
+	        key: "render",
+	        value: function render() {
+	            return "<div class=\"card\">\n                <div class=\"_header\">\n                    <div class=\"_title\">" + this.data.word + "</div>\n                </div>\n                <div class=\"_content\">\n                    <div class=\"_headline\">" + this.data.reading + "</div>\n                    <div class=\"_subheading\">" + this.data.meaning + "</div>\n                    <div class=\"_description\">\n                       " + this.data.example + "\n                    </div>\n                </div>\n            </div>";
+	        }
+	    }]);
+
+	    return Card;
+	}(_component2.default);
+
+	exports.default = Card;
 
 /***/ },
-/* 4 */
-/*!*****************************!*\
-  !*** ./sources/core/api.js ***!
-  \*****************************/
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-	var cards = {
-		phrases: [{
-			title: '失礼します',
-			hiragana: 'しつれいします',
-			katakana: '',
-			translation: 'goodbye / excuse me (polite)',
-			audio: ''
-		}, {
-			title: 'どういたしまして',
-			hiragana: 'どういたしまして',
-			katakana: '',
-			translation: 'you are welcome',
-			audio: ''
-		}, {
-			title: 'じゃ、また明日',
-			hiragana: 'じゃ、またあした',
-			katakana: '',
-			translation: 'see you tomorrow',
-			audio: ''
-		}],
-
-		kanji: [{
-			title: '一',
-			radical: '一',
-			hiragana: 'いち',
-			translation: 'one'
-		}, {
-			title: '人',
-			radical: '人 (亻)',
-			hiragana: 'ひと',
-			translation: 'man; person; human being; mankind; people'
-		}, {
-			title: '手',
-			radical: '手 (扌龵)',
-			hiragana: 'て',
-			translation: 'hand; arm'
-		}],
-
-		compounds: [{
-			title: '一つ',
-			hiragana: 'ひとつ',
-			translation: 'one (thing)'
-		}, {
-			title: '一番',
-			hiragana: 'いちばん',
-			translation: 'number one; best'
-		}, {
-			title: '一人',
-			hiragana: ' ひとり',
-			translation: 'one person; alone'
-		}, {
-			title: '大人',
-			hiragana: 'おとな',
-			translation: 'adult'
-		}, {
-			title: '外国人',
-			hiragana: 'がいこくじん',
-			translation: 'foreigner; alien; non-Japanese'
-		}, {
-			title: '上手',
-			hiragana: 'じょうず',
-			translation: 'skill; skillful; dexterity'
-		}, {
-			title: '下手',
-			hiragana: 'へた',
-			translation: 'unskillful; poor; awkward'
-		}],
-
-		practice: [{
-			title: '日曜日',
-			caption: 'にちようび',
-			content: 'Sunday (day of the sun)'
-		}, {
-			title: '月曜日',
-			caption: 'げつようび',
-			content: 'Monday (day of the moon)'
-		}, {
-			title: '火曜日',
-			caption: 'かようび',
-			content: 'Tuesday (day of fire)'
-		}, {
-			title: '水曜日',
-			caption: 'すいようび',
-			content: 'Wednesday (day of water)'
-		}, {
-			title: '木曜日',
-			caption: 'もくようび',
-			content: 'Thursday (day of wood)'
-		}, {
-			title: '金曜日',
-			caption: 'きんようび',
-			content: 'Friday (day of metal)'
-		}, {
-			title: '土曜日',
-			caption: 'どようび',
-			content: 'Saturday (day of soil)'
-		}]
-	};
-
-	exports['default'] = {
-		getCard: function getCard() {
-			var data = cards.kanji[Math.floor(Math.random() * cards.kanji.length)];
-			data.kanji = data.title;
-			data.compounds = this.getCompounds(data.kanji);
-			return data;
-		},
-
-		getCompounds: function getCompounds(kanji) {
-			return cards.compounds.filter(function (item) {
-				return item.title.indexOf(kanji) > -1;
-			});
-		},
-
-		getPractice: function getPractice() {
-			var data = cards.practice.slice(0);
-			return data;
-		},
-
-		shuffle: function shuffle(array) {
-			var i = 0,
-			    j = 0,
-			    temp = null;
-
-			for (i = array.length - 1; i > 0; i -= 1) {
-				j = Math.floor(Math.random() * (i + 1));
-				temp = array[i];
-				array[i] = array[j];
-				array[j] = temp;
-			}
-
-			/*while (0 !== currentIndex) {
-	  		// Pick a remaining element...
-	  	randomIndex = Math.floor(Math.random() * currentIndex);
-	  	currentIndex -= 1;
-	  		// And swap it with the current element.
-	  	temporaryValue = array[currentIndex];
-	  	array[currentIndex] = array[randomIndex];
-	  	array[randomIndex] = temporaryValue;
-	  }*/
-
-			return array;
-		}
-	};
-	module.exports = exports['default'];
-
-/***/ },
-/* 5 */
+/* 6 */
 /*!*******************************!*\
   !*** ./sources/scss/app.scss ***!
   \*******************************/
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
-
-/***/ },
-/* 6 */,
-/* 7 */,
-/* 8 */,
-/* 9 */
-/*!**********************************!*\
-  !*** ./sources/scss/_debug.scss ***!
-  \**********************************/
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
