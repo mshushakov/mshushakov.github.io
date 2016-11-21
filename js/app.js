@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "7b8b79aeb041cc576b03"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "859fadfa4fa94bd92bb6"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -610,31 +610,46 @@
 
 	var _db2 = _interopRequireDefault(_db);
 
-	var _card = __webpack_require__(/*! components/card */ 5);
+	var _api = __webpack_require__(/*! core/api */ 5);
+
+	var _api2 = _interopRequireDefault(_api);
+
+	var _card = __webpack_require__(/*! components/card */ 6);
 
 	var _card2 = _interopRequireDefault(_card);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	__webpack_require__(/*! scss/app.scss */ 6);
+	__webpack_require__(/*! scss/app.scss */ 7);
 
 	//if (NODE_ENV == 'development') require('scss/_debug.scss');
 
+	var viewport = document.body.querySelector('.viewport');
+	viewport.classList.add('-state-loading');
+
 	_db2.default.open().then(function () {
 		_db2.default.get('cards').then(function (data) {
-			return data.forEach(function (data, index) {
-				var card = new _card2.default(null, data);
-				_component2.default.render(card, document.body.querySelector('.list'));
-
-				card.style.opacity = 0;
-				card.animate([{ transform: 'translateY(100px)', opacity: 0 }, { transform: 'translateY(0)', opacity: 1 }], {
-					delay: index * 100,
-					duration: 200,
-					fill: 'forwards'
-				});
+			if (data.length) show(data);else _api2.default.get('nouns').then(function (data) {
+				show(data);
+				_db2.default.add(data);
 			});
 		});
 	});
+
+	var show = function show(data) {
+		return data.forEach(function (data, index) {
+			var card = new _card2.default(null, data);
+			_component2.default.render(card, viewport);
+			viewport.classList.remove('-state-loading');
+
+			card.style.opacity = 0;
+			card.animate([{ transform: 'translateY(100px)', opacity: 0 }, { transform: 'translateY(0)', opacity: 1 }], {
+				delay: index * 100,
+				duration: 200,
+				fill: 'forwards'
+			});
+		});
+	};
 
 /***/ },
 /* 2 */
@@ -742,7 +757,7 @@
 
 	            if (typeof component !== 'string') {
 	                if (element) element.appendChild(component);
-	                return element || component;
+	                return component;
 	            } else {
 	                var fragment = document.createDocumentFragment();
 	                var temp = document.createElement('div');
@@ -755,7 +770,7 @@
 
 	                if (element) element.appendChild(fragment);
 
-	                return element || fragment;
+	                return fragment;
 	            }
 	        }
 	    }]);
@@ -770,7 +785,7 @@
 /*!****************************!*\
   !*** ./sources/core/db.js ***!
   \****************************/
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -779,6 +794,12 @@
 	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _api = __webpack_require__(/*! ./api */ 5);
+
+	var _api2 = _interopRequireDefault(_api);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -806,29 +827,45 @@
 
 	            request.onupgradeneeded = function (event) {
 	                db = event.target.result;
-	                var store = db.createObjectStore('cards', { autoIncrement: true });
-	                store.add({ word: '上', reading: 'うえ', meaning: 'above; up; over; top', example: '本は机の上です' });
-	                store.add({ word: '下', reading: 'した', meaning: 'below; down; under; bottom', example: '猫は机の下です' });
-	                store.add({ word: '前', reading: 'まえ', meaning: 'in front (of); before', example: 'あの人はあの家の前です。' });
-	                store.add({ word: '後ろ', reading: 'うしろ', meaning: 'back; behind', example: '私の家の後ろです。' });
+	                db.createObjectStore('cards', { autoIncrement: true });
 	            };
 
 	            return promise;
 	        }
 	    }, {
 	        key: 'get',
-	        value: function get(store) {
-	            var key = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
-
+	        value: function get() {
+	            //store, key = null) {
 	            var transaction = db.transaction(['cards'], 'readwrite');
-	            var store = transaction.objectStore(store);
+	            var store = transaction.objectStore('cards');
 	            var promise = new Promise(function (resolve, reject) {
-	                //transaction = (key) ? store.get(key) : store.getALL();
-	                transaction.objectStore('cards').getAll().onsuccess = function (event) {
+	                var request = store.getAll();
+	                request.onsuccess = function (event) {
 	                    return resolve(event.target.result);
 	                };
-	                //transaction.onerror = (event) => reject(new Error(transaction.error));
-	                db.close();
+	                request.onerror = function (event) {
+	                    return reject(new Error(transaction.error));
+	                };
+	            });
+
+	            return promise;
+	        }
+	    }, {
+	        key: 'add',
+	        value: function add(data) {
+	            //store, key = null) {
+	            var transaction = db.transaction(['cards'], 'readwrite');
+	            var store = transaction.objectStore('cards');
+	            var promise = new Promise(function (resolve, reject) {
+	                data.forEach(function (card) {
+	                    return store.add(card);
+	                });
+	                transaction.onsuccess = function (event) {
+	                    return resolve(event.target.result);
+	                };
+	                transaction.onerror = function (event) {
+	                    return reject(new Error(transaction.error));
+	                };
 	            });
 
 	            return promise;
@@ -842,6 +879,80 @@
 
 /***/ },
 /* 5 */
+/*!*****************************!*\
+  !*** ./sources/core/api.js ***!
+  \*****************************/
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var url = '/app/data/';
+
+	var API = function () {
+		function API() {
+			_classCallCheck(this, API);
+		}
+
+		_createClass(API, null, [{
+			key: 'get',
+			value: function get(type) {
+				return API.ajax({ url: url + type + '.json' });
+			}
+		}, {
+			key: 'shuffle',
+			value: function shuffle(array) {
+				var i = 0,
+				    j = 0,
+				    temp = null;
+
+				for (i = array.length - 1; i > 0; i -= 1) {
+					j = Math.floor(Math.random() * (i + 1));
+					temp = array[i];
+					array[i] = array[j];
+					array[j] = temp;
+				}
+
+				return array;
+			}
+		}, {
+			key: 'ajax',
+			value: function ajax(_ref) {
+				var url = _ref.url;
+				var params = _ref.params;
+
+				var promise = new Promise(function (resolve, reject) {
+					var xhr = new XMLHttpRequest();
+					xhr.open('GET', url);
+					xhr.send();
+
+					xhr.addEventListener('load', function () {
+						if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+							resolve(JSON.parse(xhr.responseText));
+						} else {
+							reject(new Error('API.ajax returned: ' + xhr.status));
+						}
+					});
+				});
+
+				return promise;
+			}
+		}]);
+
+		return API;
+	}();
+
+	exports.default = API;
+
+/***/ },
+/* 6 */
 /*!************************************!*\
   !*** ./sources/components/card.js ***!
   \************************************/
@@ -890,7 +1001,7 @@
 	    }, {
 	        key: "render",
 	        value: function render() {
-	            return "<div class=\"card\">\n                <div class=\"_header\">\n                    <div class=\"_title\">" + this.data.word + "</div>\n                </div>\n                <div class=\"_content\">\n                    <div class=\"_headline\">" + this.data.reading + "</div>\n                    <div class=\"_subheading\">" + this.data.meaning + "</div>\n                    <div class=\"_description\">\n                       " + this.data.example + "\n                    </div>\n                </div>\n            </div>";
+	            return "<div class=\"card\">\n                <div class=\"_header\">\n                    <div class=\"_title\">" + this.data.kanji + "</div>\n                </div>\n                <div class=\"_content\">\n                    <div class=\"_headline\">" + this.data.kana + "</div>\n                    <div class=\"_subheading\">" + this.data.meaning + "</div>\n                    <div class=\"_description\">\n                       " + this.data.group + "\n                    </div>\n                </div>\n            </div>";
 	        }
 	    }]);
 
@@ -900,7 +1011,7 @@
 	exports.default = Card;
 
 /***/ },
-/* 6 */
+/* 7 */
 /*!*******************************!*\
   !*** ./sources/scss/app.scss ***!
   \*******************************/
