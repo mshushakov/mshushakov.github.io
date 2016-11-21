@@ -158,7 +158,7 @@
 
 @media (min-width: 481px) {
   .viewport {
-    max-width: none;
+    max-width: 960px;
   }
   .card {
     display: inline-block;
