@@ -25,7 +25,7 @@ app.TodoView = Backbone.View.extend({
 
     initialize: function() {
         this.listenTo(this.model, 'change', this._updateTimer);
-        this.listenTo(this.model, 'change:pause', this.switchState);
+        this.listenTo(this.model, 'change:paused', this.switchState);
         this.listenTo(this.model, 'change:completed', this.switchState);
         this._time = this.model.getTime();
     },

@@ -22,15 +22,15 @@ app.Todo = Backbone.Model.extend({
 	start: function () {
         this._timer.startPeriod();
         this.change("periods", this._timer.periods);
-        this.change("pause", false);
-        this.change("completed", false);;
+        this.change("paused", false);
+        this.change("completed", false);
 	},
 
 	pause: function() {
-        if (!this.get("pause")) {
+        if (!this.get("paused")) {
             this._timer.endPeriod();
             this.change("periods", this._timer.periods);
-            this.change("pause", true);
+            this.change("paused", true);
         }
 	},
 

@@ -29,7 +29,7 @@ body {
     left: -1px;
     z-index: -1;
     background: linear-gradient(to right, rgba(0,0,0,.05) 2px, transparent 2px, transparent);
-    background-size: 25%;
+    background-size: 25% 100%;
     background-repeat: repeat-x; }
 
 canvas {
