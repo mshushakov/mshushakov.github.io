@@ -28,6 +28,12 @@
   color: rgba(0, 0, 0, 0.87);
 }
 
+.card ._textbox {
+  font-size: 14px;
+  line-height: 24px;
+  color: rgba(0, 0, 0, 0.87);
+}
+
 @keyframes fade {
   from {
     opacity: 0;
@@ -58,22 +64,11 @@
   }
 }
 
-.viewport.-state-loading::before {
-  animation: fade .4s;
-}
-
-.viewport.-state-loading-completed::before, .viewport.-state-loading-completed ~ .viewport-icons.-preloader {
-  animation: fade .4s;
-  animation-direction: reverse;
-  animation-fill-mode: forwards;
-}
-
 .viewport {
   position: relative;
   top: 56px;
-  min-height: calc(100% - 56px);
-  max-width: 468px;
-  margin: auto;
+  height: calc(100% - 56px);
+  overflow: auto;
 }
 
 .viewport::before {
@@ -88,21 +83,10 @@
   z-index: 1;
 }
 
-.viewport.-state-loading::before {
-  display: block;
-}
-
+.viewport.-state-loading::before,
 .viewport.-state-loading ~ .viewport-icons.-preloader {
   display: block;
-}
-
-.viewport.-state-loading-completed::before {
-  display: block;
-  animation-delay: .4s;
-}
-
-.viewport.-state-loading-completed ~ .viewport-icons.-preloader {
-  display: block;
+  /* animation: fade .4s; */
 }
 
 .viewport-icons {
@@ -156,13 +140,45 @@
   margin-bottom: 16px;
 }
 
+.card ._textfield {
+  margin-top: 16px;
+}
+
+.card ._textbox {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0 2px 4px;
+  border: none;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.26);
+  appearance: none;
+  outline: none;
+  background: none;
+  transition: border-color .2s;
+}
+
+.card ._textbox:focus {
+  border-color: #03A9F4;
+}
+
+.card ._textbox.-success {
+  border-color: #388e3c;
+}
+
+.card ._textbox.-error {
+  border-color: #F44336;
+}
+
 @media (min-width: 481px) {
-  .viewport {
-    max-width: 960px;
-  }
   .card {
     display: inline-block;
     width: calc(50% - 16px);
+  }
+}
+
+@media (min-width: 800px) {
+  .card {
+    display: inline-block;
+    width: calc(33.333% - 16px);
   }
 }
 

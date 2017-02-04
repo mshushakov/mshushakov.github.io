@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "859fadfa4fa94bd92bb6"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "32f43570d2af112a1ee5"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -610,46 +610,86 @@
 
 	var _db2 = _interopRequireDefault(_db);
 
-	var _api = __webpack_require__(/*! core/api */ 5);
+	var _helper = __webpack_require__(/*! core/helper */ 5);
 
-	var _api2 = _interopRequireDefault(_api);
+	var _helper2 = _interopRequireDefault(_helper);
 
 	var _card = __webpack_require__(/*! components/card */ 6);
 
 	var _card2 = _interopRequireDefault(_card);
 
+	var _question = __webpack_require__(/*! components/question */ 7);
+
+	var _question2 = _interopRequireDefault(_question);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	__webpack_require__(/*! scss/app.scss */ 7);
+	__webpack_require__(/*! scss/app.scss */ 8);
 
 	//if (NODE_ENV == 'development') require('scss/_debug.scss');
 
-	var viewport = document.body.querySelector('.viewport');
-	viewport.classList.add('-state-loading');
+	var viewport = {
+		element: document.body.querySelector('.viewport'),
 
-	_db2.default.open().then(function () {
-		_db2.default.get('cards').then(function (data) {
-			if (data.length) show(data);else _api2.default.get('nouns').then(function (data) {
-				show(data);
-				_db2.default.add(data);
-			});
-		});
+		changeState: function (state) {
+			this.element.classList.add(`-state-${state}`);
+			//this.element.addEventListener('animationstart', (e) => console.log(e.animationName));
+			//this.element.addEventListener('animationend', (e) => console.log(e.animationName));
+		}
+	};
+
+	_helper2.default.ajax({ url: 'data/questions.json' }).then(data => {
+		_helper2.default.shuffle(data);
+		_component2.default.render(new _question2.default(null, data), viewport.element);
 	});
 
-	var show = function show(data) {
-		return data.forEach(function (data, index) {
-			var card = new _card2.default(null, data);
-			_component2.default.render(card, viewport);
-			viewport.classList.remove('-state-loading');
+	//viewport.changeState('loading');
 
-			card.style.opacity = 0;
-			card.animate([{ transform: 'translateY(100px)', opacity: 0 }, { transform: 'translateY(0)', opacity: 1 }], {
-				delay: index * 100,
-				duration: 200,
-				fill: 'forwards'
-			});
+	//DB.open().then(function() {
+	/*Helper.ajax({ url: 'data/nouns.json' }).then(data => {
+		DB.add('words', data);
+		data.forEach(word => {
+			Component.render(new Card(null, word), viewport.element);
 		});
-	};
+	});*/
+	//});
+
+	/*function showCards(data) {
+		data.forEach(data => {
+			Component.render(new Card(null, data), viewport.element);
+		});
+	}
+
+	function* getCards() {
+		yield DB.open();
+
+		let data = yield DB.get('words');
+		
+		if (!data.length) {
+			let data = yield Helper.ajax({ url: 'data/nouns.json' });
+			DB.add('words', data);
+			showCards(data);
+		}
+		else {
+			showCards(data);
+		}
+
+		return data;
+	}
+
+	execute(getCards());
+
+	function execute(generator, value) {
+	  let next = generator.next(value);
+	  if (!next.done) {
+	    next.value.then(data => {
+	      execute(generator, data);
+	    });
+	  }
+	  else {
+	    console.log(next.value.map(item => item.word));
+	  }
+	}*/
 
 /***/ },
 /* 2 */
@@ -664,40 +704,38 @@
 		value: true
 	});
 	exports.default = Store;
-	function Store(data) {
-		var actions = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-
-		var _state = data;
-		var _actions = actions;
-		var _subscribers = {};
+	function Store(data, actions = {}) {
+		const _state = data;
+		const _actions = actions;
+		const _subscribers = {};
 
 		return {
 			get state() {
 				return Array.isArray(_state) ? _state.slice() : Object.assign({}, _state);
 			},
 
-			dispatch: function dispatch(type, data) {
+			dispatch(type, data) {
 				var result = null;
 
 				if (_actions[type]) {
 					result = Promise.resolve(_actions[type](_state, data));
 				} else {
-					console.warn("Action " + type + " does not exist");
+					console.warn(`Action ${type} does not exist`);
 				}
 
 				if (_subscribers[type] && result) {
-					_subscribers[type].forEach(function (subscriber) {
-						result.then(subscriber.update).catch(function (error) {
-							return console.error(error);
-						});
+					_subscribers[type].forEach(subscriber => {
+						result.then(subscriber.update).catch(error => console.error(error));
 					});
 				}
 			},
-			subscribe: function subscribe(type, callback) {
+
+			subscribe(type, callback) {
 				if (!_subscribers[type]) _subscribers[type] = [];
 				_subscribers[type].push({ update: callback });
 			},
-			unsubscribe: function unsubscribe() {
+
+			unsubscribe() {
 				//_subscribers
 			}
 		};
@@ -715,18 +753,8 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var Component = function () {
-	    function Component(store) {
-	        var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-	        var extend = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
-
-	        _classCallCheck(this, Component);
-
+	class Component {
+	    constructor(store, data = {}, extend = {}) {
 	        Object.assign(this, extend);
 	        this.store = store;
 	        this.data = data;
@@ -739,44 +767,35 @@
 	        return this.element;
 	    }
 
-	    _createClass(Component, [{
-	        key: 'init',
-	        value: function init() {
-	            console.warn('invoked abstract Component.init method');
+	    init() {
+	        console.warn('invoked abstract Component.init method');
+	    }
+
+	    render() {
+	        console.warn('invoked abstract Component.render method');
+	        return `<div>Empty component</div>`;
+	    }
+
+	    static render(component, element = null) {
+	        if (typeof component !== 'string') {
+	            if (element) element.appendChild(component);
+	            return component;
+	        } else {
+	            let fragment = document.createDocumentFragment();
+	            let temp = document.createElement('div');
+
+	            temp.innerHTML = component;
+
+	            while (temp.children.item(0)) {
+	                fragment.appendChild(temp.children.item(0));
+	            };
+
+	            if (element) element.appendChild(fragment);
+
+	            return fragment;
 	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            console.warn('invoked abstract Component.render method');
-	            return '<div>Empty component</div>';
-	        }
-	    }], [{
-	        key: 'render',
-	        value: function render(component) {
-	            var element = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
-
-	            if (typeof component !== 'string') {
-	                if (element) element.appendChild(component);
-	                return component;
-	            } else {
-	                var fragment = document.createDocumentFragment();
-	                var temp = document.createElement('div');
-
-	                temp.innerHTML = component;
-
-	                while (temp.children.item(0)) {
-	                    fragment.appendChild(temp.children.item(0));
-	                };
-
-	                if (element) element.appendChild(fragment);
-
-	                return fragment;
-	            }
-	        }
-	    }]);
-
-	    return Component;
-	}();
+	    }
+	}
 
 	exports.default = Component;
 
@@ -785,171 +804,126 @@
 /*!****************************!*\
   !*** ./sources/core/db.js ***!
   \****************************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _api = __webpack_require__(/*! ./api */ 5);
-
-	var _api2 = _interopRequireDefault(_api);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
 	var db;
 
-	var DB = function () {
-	    function DB() {
-	        _classCallCheck(this, DB);
+	class DB {
+	    static open() {
+	        var request = indexedDB.open('cards', 1);
+
+	        var promise = new Promise((resolve, reject) => {
+	            request.onsuccess = event => {
+	                db = event.target.result;
+	                resolve(event.target.result);
+	            };
+	            request.onerror = event => {
+	                reject(new Error(request.error));
+	            };
+	        });
+
+	        request.onupgradeneeded = event => {
+	            db = event.target.result;
+	            /*** 
+	                Structure:
+	                words -> { word, reading, meaning }
+	            */
+	            db.createObjectStore('words', { keyPath: "word" });
+	        };
+
+	        return promise;
 	    }
 
-	    _createClass(DB, null, [{
-	        key: 'open',
-	        value: function open() {
-	            var request = indexedDB.open('cards', 2);
+	    static get(storeName) {
+	        //store, key = null) {
+	        var transaction = db.transaction([storeName], 'readwrite');
+	        var store = transaction.objectStore(storeName);
+	        var promise = new Promise(function (resolve, reject) {
+	            var request = store.getAll();
+	            request.onsuccess = event => resolve(event.target.result);
+	            request.onerror = event => reject(new Error(transaction.error));
+	        });
 
-	            var promise = new Promise(function (resolve, reject) {
-	                request.onsuccess = function (event) {
-	                    db = event.target.result;
-	                    resolve(event.target.result);
-	                };
-	                request.onerror = function (event) {
-	                    reject(new Error(request.error));
-	                };
+	        return promise;
+	    }
+
+	    static add(storeName, data) {
+	        //store, key = null) {
+	        var transaction = db.transaction([storeName], 'readwrite');
+	        var store = transaction.objectStore(storeName);
+	        var promise = new Promise(function (resolve, reject) {
+	            data.forEach(item => {
+	                var request = store.add(item);
 	            });
+	            transaction.onsuccess = event => resolve(event.target.result);
+	            transaction.onerror = event => reject(new Error(transaction.error));
+	        });
 
-	            request.onupgradeneeded = function (event) {
-	                db = event.target.result;
-	                db.createObjectStore('cards', { autoIncrement: true });
-	            };
-
-	            return promise;
-	        }
-	    }, {
-	        key: 'get',
-	        value: function get() {
-	            //store, key = null) {
-	            var transaction = db.transaction(['cards'], 'readwrite');
-	            var store = transaction.objectStore('cards');
-	            var promise = new Promise(function (resolve, reject) {
-	                var request = store.getAll();
-	                request.onsuccess = function (event) {
-	                    return resolve(event.target.result);
-	                };
-	                request.onerror = function (event) {
-	                    return reject(new Error(transaction.error));
-	                };
-	            });
-
-	            return promise;
-	        }
-	    }, {
-	        key: 'add',
-	        value: function add(data) {
-	            //store, key = null) {
-	            var transaction = db.transaction(['cards'], 'readwrite');
-	            var store = transaction.objectStore('cards');
-	            var promise = new Promise(function (resolve, reject) {
-	                data.forEach(function (card) {
-	                    return store.add(card);
-	                });
-	                transaction.onsuccess = function (event) {
-	                    return resolve(event.target.result);
-	                };
-	                transaction.onerror = function (event) {
-	                    return reject(new Error(transaction.error));
-	                };
-	            });
-
-	            return promise;
-	        }
-	    }]);
-
-	    return DB;
-	}();
+	        return promise;
+	    }
+	}
 
 	exports.default = DB;
 
 /***/ },
 /* 5 */
-/*!*****************************!*\
-  !*** ./sources/core/api.js ***!
-  \*****************************/
-/***/ function(module, exports) {
+/*!********************************!*\
+  !*** ./sources/core/helper.js ***!
+  \********************************/
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
+	var url = (undefined) == 'development' ? '/app/data/' : '/data/';
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var url = '/app/data/';
-
-	var API = function () {
-		function API() {
-			_classCallCheck(this, API);
+	class Helper {
+		static get(type) {
+			return API.ajax({ url: url + type + '.json' });
 		}
 
-		_createClass(API, null, [{
-			key: 'get',
-			value: function get(type) {
-				return API.ajax({ url: url + type + '.json' });
-			}
-		}, {
-			key: 'shuffle',
-			value: function shuffle(array) {
-				var i = 0,
-				    j = 0,
-				    temp = null;
+		static ajax({ url, params }) {
+			var promise = new Promise(function (resolve, reject) {
+				var xhr = new XMLHttpRequest();
+				xhr.open('GET', url);
+				xhr.send();
 
-				for (i = array.length - 1; i > 0; i -= 1) {
-					j = Math.floor(Math.random() * (i + 1));
-					temp = array[i];
-					array[i] = array[j];
-					array[j] = temp;
-				}
-
-				return array;
-			}
-		}, {
-			key: 'ajax',
-			value: function ajax(_ref) {
-				var url = _ref.url;
-				var params = _ref.params;
-
-				var promise = new Promise(function (resolve, reject) {
-					var xhr = new XMLHttpRequest();
-					xhr.open('GET', url);
-					xhr.send();
-
-					xhr.addEventListener('load', function () {
-						if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-							resolve(JSON.parse(xhr.responseText));
-						} else {
-							reject(new Error('API.ajax returned: ' + xhr.status));
-						}
-					});
+				xhr.addEventListener('load', function () {
+					if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+						resolve(JSON.parse(xhr.responseText));
+					} else {
+						reject(new Error(`API.ajax returned: ${xhr.status}`));
+					}
 				});
+			});
 
-				return promise;
+			return promise;
+		}
+
+		static shuffle(array) {
+			var i = 0,
+			    j = 0,
+			    temp = null;
+
+			for (i = array.length - 1; i > 0; i -= 1) {
+				j = Math.floor(Math.random() * (i + 1));
+				temp = array[i];
+				array[i] = array[j];
+				array[j] = temp;
 			}
-		}]);
 
-		return API;
-	}();
+			return array;
+		}
+	}
 
-	exports.default = API;
+	exports.default = Helper;
 
 /***/ },
 /* 6 */
@@ -964,7 +938,49 @@
 	    value: true
 	});
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	var _component = __webpack_require__(/*! tools/component */ 3);
+
+	var _component2 = _interopRequireDefault(_component);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	class Card extends _component2.default {
+	    constructor(...data) {
+	        return super(...data);
+	    }
+
+	    init() {}
+
+	    render() {
+	        return `<div class="card">
+	                <div class="_header">
+	                    <div class="_title">${this.data.word}</div>
+	                </div>
+	                <div class="_content">
+	                    <div class="_headline">${this.data.reading}</div>
+	                    <div class="_subheading">${this.data.meaning}</div>
+	                    <div class="_description">
+	                       ${this.data.group}
+	                    </div>
+	                </div>
+	            </div>`;
+	    }
+	}
+
+	exports.default = Card;
+
+/***/ },
+/* 7 */
+/*!****************************************!*\
+  !*** ./sources/components/question.js ***!
+  \****************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
 
 	var _component = __webpack_require__(/*! tools/component */ 3);
 
@@ -972,46 +988,60 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Card = function (_Component) {
-	    _inherits(Card, _Component);
-
-	    function Card() {
-	        var _Object$getPrototypeO;
-
-	        var _this, _ret;
-
-	        _classCallCheck(this, Card);
-
-	        for (var _len = arguments.length, data = Array(_len), _key = 0; _key < _len; _key++) {
-	            data[_key] = arguments[_key];
-	        }
-
-	        return _ret = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Card)).call.apply(_Object$getPrototypeO, [this].concat(data))), _this), _possibleConstructorReturn(_this, _ret);
+	class Question extends _component2.default {
+	    constructor(...data) {
+	        return super(...data);
 	    }
 
-	    _createClass(Card, [{
-	        key: "init",
-	        value: function init() {}
-	    }, {
-	        key: "render",
-	        value: function render() {
-	            return "<div class=\"card\">\n                <div class=\"_header\">\n                    <div class=\"_title\">" + this.data.kanji + "</div>\n                </div>\n                <div class=\"_content\">\n                    <div class=\"_headline\">" + this.data.kana + "</div>\n                    <div class=\"_subheading\">" + this.data.meaning + "</div>\n                    <div class=\"_description\">\n                       " + this.data.group + "\n                    </div>\n                </div>\n            </div>";
-	        }
-	    }]);
+	    init() {
+	        var input = this.element.querySelector('[ref="input"]');
+	        var words = this.element.querySelector('[ref="words"]');
+	        var question = this.element.querySelector('[ref="question"]');
+	        var current = 0;
+	        var total = this.data.length;
 
-	    return Card;
-	}(_component2.default);
+	        input.addEventListener('change', e => {
+	            if (input.value.trim() === this.data[current].answer) input.classList.add('-success');else input.classList.add('-error');
+	            input.disabled = true;
 
-	exports.default = Card;
+	            setTimeout(() => {
+	                current++;
+	                if (current === total) current = 0;
+	                show(current);
+	            }, 1500);
+	        });
+
+	        var show = index => {
+	            input.value = '';
+	            input.classList.remove('-success');
+	            input.classList.remove('-error');
+	            question.textContent = this.data[index].question;
+	            words.textContent = this.data[index].words;
+	            input.disabled = false;
+	            input.focus();
+	        };
+
+	        show(current);
+	    }
+
+	    render() {
+	        return `<div class="card">
+	                <div class="_content">
+	                    <div class="_headline" ref="question"></div>
+	                    <div class="_subheading">Combine these words to a sentence:</div>
+	                    <div class="_description" ref="words"></div>
+	                    <div class="_textfield">
+	                        <input ref='input' class="_textbox" type="text" placeholder="Your answer...">
+	                    </div>
+	                </div>
+	            </div>`;
+	    }
+	}
+
+	exports.default = Question;
 
 /***/ },
-/* 7 */
+/* 8 */
 /*!*******************************!*\
   !*** ./sources/scss/app.scss ***!
   \*******************************/
