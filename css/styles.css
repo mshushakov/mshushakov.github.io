@@ -1,3 +1,4 @@
+@charset "UTF-8";
 .card ._header {
   font-size: 45px;
   line-height: 63px;
@@ -131,6 +132,23 @@
     transition: border-color .2s; }
     .card ._textbox:focus {
       border-color: #00bcd4; }
+  .card ._audio::before {
+    content: '\25B6';
+    display: inline-block;
+    font-size: 0.6em;
+    line-height: 1;
+    text-align: center;
+    width: 1.6em;
+    height: 1.6em;
+    border: 2px solid;
+    border-radius: 50%;
+    background: #FAFAFA;
+    color: #00bcd4;
+    margin-right: 0.5em;
+    box-sizing: border-box;
+    padding-top: 0.2em;
+    padding-left: 0.2em;
+    vertical-align: 0.17em; }
   .card.-correct {
     border-color: #388e3c; }
   .card.-incorrect {
