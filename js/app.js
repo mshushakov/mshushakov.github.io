@@ -858,7 +858,7 @@ class Card extends _component2.default {
 	save(e) {
 		e.preventDefault();
 		const elem = this.element.querySelector('._textbox');
-		const value = elem.value;
+		const value = elem.value.trim();
 		if (!value) return;
 		this.bindings.setData({ state: '-saving' });
 		_restdb2.default.post('examples', { example: value, word: this.data.word }).then(data => {
@@ -914,7 +914,7 @@ class Cards extends _component2.default {
 	save(e) {
 		e.preventDefault();
 		const elem = this.form.querySelector('._textbox');
-		const value = elem.value;
+		const value = elem.value.trim();
 		if (!value) return;
 		this.cards.insertBefore(new Card({ word: value, examples: [] }).element, this.cards.firstChild);
 	}
