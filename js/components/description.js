@@ -15,16 +15,16 @@ function Levels(props) {
 			create('th', { textContent: 'Level' }),
 			create('th', { textContent: 'Bonus' }),
 			create('th', { textContent: 'Features' }),
-			create('th', { textContent: 'Rages' }),
-			create('th', { textContent: 'Damage' })
+			//create('th', { textContent: 'Rages' }),
+			//create('th', { textContent: 'Damage' })
 		),
 		...props.map(data => {
 			return create('tr', null, 
 				create('td', { textContent: data.level }),
-				create('td', { textContent: '+2' }),
+				create('td', { textContent: '+' + data.prof_bonus }),
 				create('td', { textContent: data.features.map(feature => feature.name).join(', ') || '-' }),
-				create('td', { textContent: '2' }),
-				create('td', { textContent: '+2' })
+				//create('td', { textContent: data.class_specific.rage_count }),
+				//create('td', { textContent: data.class_specific.rage_damage_bonus })
 			)	
 		})
 		
