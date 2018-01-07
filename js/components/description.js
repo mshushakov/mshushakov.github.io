@@ -2,7 +2,7 @@ import { create, asyncrender } from '/js/tools.js';
 import { Icon } from '/js/components/icon.js';
 
 
-const extract = (items) => items.map(item => item.name.replace('Skill: ', '')).join(', ');
+const extract = (items) => items.map(item => (item.from) ? extract(item.from) : item.name.replace('Skill: ', '')).join(', ');
 
 function Equipment(props) {
 	const equipments = props.starting_equipment.map(equipment => `${equipment.item.name} (${equipment.quantity})`).join(', ')
@@ -35,12 +35,7 @@ export function Description(props) {
 	props.image = props.image || Icon({ image: `/symbols/${props.name.toLowerCase()}.jpg` });
 
 	const choices = props.proficiency_choices.map(choices => {
-		const list = choices.from.map(item => {
-			if (item.from) {
-				return extract(item.from)
-			}
-			return item.name;
-		}).join(', ');
+		const list = extract(choices.from);
 
 		return create('p', { 
 			className: 'section_list',
