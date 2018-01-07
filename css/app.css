@@ -4,7 +4,7 @@
 	--text-main: 14px/24px var(--text-font);
 	--text-headline: 300 21px/24px var(--text-font);
 	--text-subheadline: 300 16px/24px var(--text-font);
-	--text-toolbar: 20px/20px var(--text-font);
+	--text-toolbar: 20px/24px var(--text-font);
 	--text-small: 300 13px/18px var(--text-font);
 	
 	--bg-color: #fafafa;
@@ -72,7 +72,7 @@ html, body { margin: 0; background: var(--bg-color); font-family: var(--font-fam
 
 
 .app {
-	padding-top: 52px;
+	padding-top: 56px;
 	margin: auto;
 	max-width: 960px;
 }
