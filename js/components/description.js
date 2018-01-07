@@ -5,8 +5,26 @@ import { Icon } from '/js/components/icon.js';
 const extract = (items) => items.map(item => (item.from) ? extract(item.from) : item.name.replace('Skill: ', '')).join(', ');
 
 function Equipment(props) {
-	const equipments = props.starting_equipment.map(equipment => `${equipment.item.name} (${equipment.quantity})`).join(', ')
-	return create('p', { className: 'section_list' , textContent: equipments })
+	const elements = [];
+	const equipments = props.starting_equipment.map(equipment => `${equipment.item.name} (${equipment.quantity})`).join(', ');
+	
+	for (let i = 1; i <= props.choices_to_make; i++) {
+		const choice = props['choice_' + i];
+		if (!choice) continue;
+		choice.forEach(choice => {
+			const any = (choice.choose !== choice.from.length) ? 'Any ' + choice.choose + ' from ' : ''
+			const text = any + choice.from.map(eq => {
+				return eq.item.name + `${eq.quantity > 1 ? ' (' + eq.quantity + ')' : ''}`
+			}).join(', ');
+			elements.push(create('li', { className: 'section_item' , textContent: text }));
+		})
+	}
+
+	return create('div', null,  
+		create('p', { className: 'section_item' , textContent: equipments }),
+		create('div', { textContent: 'Choices to make:' }),
+		create('ol', { className: 'section_list' }, ...elements )
+	)
 }
 
 function Levels(props) {
@@ -14,17 +32,13 @@ function Levels(props) {
 		create('tr', null, 
 			create('th', { textContent: 'Level' }),
 			create('th', { textContent: 'Bonus' }),
-			create('th', { textContent: 'Features' }),
-			//create('th', { textContent: 'Rages' }),
-			//create('th', { textContent: 'Damage' })
+			create('th', { textContent: 'Features' })
 		),
 		...props.map(data => {
 			return create('tr', null, 
 				create('td', { textContent: data.level }),
 				create('td', { textContent: '+' + data.prof_bonus }),
-				create('td', { textContent: data.features.map(feature => feature.name).join(', ') || '-' }),
-				//create('td', { textContent: data.class_specific.rage_count }),
-				//create('td', { textContent: data.class_specific.rage_damage_bonus })
+				create('td', { textContent: data.features.map(feature => feature.name).join(', ') || '-' })
 			)	
 		})
 		

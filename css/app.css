@@ -223,5 +223,6 @@ html, body { margin: 0; background: var(--bg-color); font-family: var(--font-fam
 	.section_table th { font: var(--text-main); padding-top: 4px; }
 	.section_table td { text-align: center; font: var(--text-small); }
 	.section_table tr:nth-child(even) { background: var(--bg-color) }
-	.section_table td:nth-child(3) { text-align: left; }
+	.section_table td:nth-child(3) { text-align: left; width: 100%; }
+	ol.section_list { list-style: decimal; margin-left: 16px; }
 
