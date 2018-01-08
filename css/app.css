@@ -5,7 +5,7 @@
 	--text-main-highlight: 400 14px/24px var(--text-font);
 	--text-headline: 300 21px/24px var(--text-font);
 	--text-subheadline: 400 16px/24px var(--text-font);
-	--text-toolbar: 20px/24px var(--text-font);
+	--text-toolbar: 18px/24px var(--text-font);
 	--text-small: 300 13px/18px var(--text-font);
 	
 	--bg-color: #fafafa;
@@ -91,9 +91,10 @@ html, body { margin: 0; background: var(--bg-color); font-family: var(--font-fam
 
 .toolbar { 
 	display: flex;
+	align-items: center;
 	background: var(--primary-color); 
 	color: var(--primary-text-color); 
-	padding: 216px 16px 16px;
+	padding: 209px 10px 9px;
 	box-shadow: 0 3px 6px var(--shadow-color);
 	position: fixed;
     top: -200px;
@@ -102,7 +103,9 @@ html, body { margin: 0; background: var(--bg-color); font-family: var(--font-fam
     z-index: 1;
     animation: fadein .4s;
 }
-	.toolbar_icons { width: 72px; }
+	.toolbar_icons { padding-right: 12px; }
+	.toolbar_icons svg { width: 24px; height: 24px; color: currentColor; padding: 7px; vertical-align: top; }
+	.toolbar_icons svg:hover { background: rgba(255,255,255,.3) }
 	.toolbar_title { font: var(--text-toolbar); text-overflow: ellipsis; overflow: hidden; white-space: nowrap; margin: 0; }
 
 
@@ -222,7 +225,7 @@ html, body { margin: 0; background: var(--bg-color); font-family: var(--font-fam
 	.content_header { display: flex; padding: 16px; border-bottom: 1px solid var(--divider-color); }
 	.content_header-icon { width: 116px; }
 	.content_header-icon .icon { width: 100px; max-width: none; padding: 0; }
-	.content_header-caption { font: var(--text-main-highlight); }
+	.content_header-caption { font: var(--text-main); }
 	.content_header-title { font: var(--text-headline); margin: 8px 0 0; }
 
 
