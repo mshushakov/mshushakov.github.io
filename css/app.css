@@ -103,10 +103,24 @@ html, body { margin: 0; background: var(--bg-color); font-family: var(--font-fam
     z-index: 1;
     animation: fadein .4s;
 }
-	.toolbar_icons { padding-right: 12px; }
-	.toolbar_icons svg { width: 24px; height: 24px; color: currentColor; padding: 7px; vertical-align: top; }
-	.toolbar_icons svg:hover { background: rgba(255,255,255,.3) }
+	.toolbar_icons { margin-right: 10px; width: 24px; height: 24px; padding: 7px; position: relative; outline: none; }
+	.toolbar_icons svg { color: currentColor; vertical-align: top; display: none; pointer-events: none; }
 	.toolbar_title { font: var(--text-toolbar); text-overflow: ellipsis; overflow: hidden; white-space: nowrap; margin: 0; }
+	
+	.toolbar_icons-wave { 
+		position: absolute; top: 0; left: 0; right: 0; bottom: 0; 
+		background: currentColor; 
+		opacity: .3; 
+		transform: scale(0); 
+		border-radius: 50%;
+		pointer-events: none;
+	}
+	/*.toolbar_icons:hover .toolbar_icons-wave { transform: scale(1);  }*/
+	.toolbar_icons:focus:not(:active) .toolbar_icons-wave { animation: scale2x .4s, fadeout .4s; }
+	
+	.-state-landing .-icon-menu { display: block; }
+	.-state-page  	.-icon-menu { display: block; }
+	.-state-modal 	.-icon-back { display: block; }
 
 
 .preloader {

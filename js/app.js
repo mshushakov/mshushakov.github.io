@@ -41,7 +41,7 @@ const Controllers = {
 
 const api = 'http://www.dnd5eapi.co/api';
 const routes = {
-	'#classes/$': Controllers.showClasses,
+	'#classes(/{0,1})$': Controllers.showClasses,
 	'#classes/(\\d+)': Controllers.showClass,
 	default: Controllers.showClasses 
 }
@@ -65,6 +65,17 @@ const App = {
 		this.component = null; // current component on the screen
 		this.container = document.querySelector('.app');
 		this.preloader = document.querySelector('.landing');
+		this.toolbar = Toolbar({ title: 'Dungeons & Dragons' });
+
+		//TODO: to think how to manage events inside of a compound
+		const events = (e) => {
+			if (e.target.classList.contains('toolbar_icons')) {
+				if (this.state === 'modal') history.back();
+			}
+		}
+		
+		this.toolbar.addEventListener('click', events)
+		
 		this.changeState(router());
 		window.addEventListener('popstate', () => this.changeState(router()))
 	},
@@ -74,7 +85,7 @@ const App = {
 		this.state = state;
 		
 		if (this.prevState === 'landing') {
-			this.container.appendChild(Toolbar());
+			this.container.appendChild(this.toolbar);
 		}
 		else {
 			this.preloader.classList.add('-preloader');	
@@ -89,8 +100,11 @@ const App = {
 			this.component = component;
 			this.component.classList.add(`-type-${state}`);
 			this.container.appendChild(component);
+
+			this.container.classList.remove(`-state-${this.prevState}`);
+			this.container.classList.add(`-state-${this.state}`);
 		});
-	}
+	},
 }
 
 App.init();
