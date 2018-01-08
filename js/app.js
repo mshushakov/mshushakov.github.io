@@ -66,13 +66,12 @@ const App = {
 		this.container = document.querySelector('.app');
 		this.preloader = document.querySelector('.landing');
 		this.changeState(router());
-		window.addEventListener('hashchange', () => this.changeState(router()))
+		window.addEventListener('popstate', () => this.changeState(router()))
 	},
 
 	changeState(controller, state = 'page', route = null) {
 		this.prevState = this.state;
 		this.state = state;
-		console.log(this.prevState, this.state);
 		
 		if (this.prevState === 'landing') {
 			this.container.appendChild(Toolbar());

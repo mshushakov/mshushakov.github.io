@@ -39,9 +39,16 @@ function Levels(props) {
 				create('td', { textContent: data.level }),
 				create('td', { textContent: '+' + data.prof_bonus }),
 				create('td', { textContent: data.features.map(feature => feature.name).join(', ') || '-' })
-			)	
+			)
 		})
-		
+	)
+}
+
+function Subclasses(props) {
+	return create('div', { className: 'section_list' },
+		create('h3', { className: 'section_subtitle', textContent: props.name }),
+		create('div', { textContent: 'Flavor: ' + props.subclass_flavor }),
+		create('p', { textContent: props.desc })
 	)
 }
 
@@ -83,6 +90,10 @@ export function Description(props) {
 			create('section', { className: 'section' },
 				create('h2', { className: 'section_title', textContent: 'Levels' }),
 				asyncrender( props.class_levels.url.toLowerCase(), Levels )
+			),
+			create('section', { className: 'section' },
+				create('h2', { className: 'section_title', textContent: 'Subclasses' }),
+				...props.subclasses.map(subclass => asyncrender(subclass.url, Subclasses))
 			),
 		)
 	);

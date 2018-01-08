@@ -23,7 +23,7 @@ This SPA hosts on [mshushakov.github.io](http://mshushakov.github.io)
 TODO
 --------
 
-*	Add subclasses information on description page
+*	~~Add subclasses section on description page~~
 *	Add modal behaviour for description page to prevent calling API again when user comes back to classes page
 *	Add catching of network errors and showing notifications
 *	Add back button in the toolbar
