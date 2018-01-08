@@ -56,7 +56,6 @@ html, body { margin: 0; background: var(--bg-color); font-family: var(--font-fam
 
 /* Comnonents */
 .landing {
-	//display: none;
 	position: absolute;
 	display: flex;
 	align-items: center;
@@ -67,8 +66,19 @@ html, body { margin: 0; background: var(--bg-color); font-family: var(--font-fam
 	left: 0;
 	right: 0;
 	background: #fff;
+	z-index: 1;
 }
 	.landing_logo { margin-bottom: 20px; }
+	.landing.-hide { display: none; }
+	.landing.-preloader { 
+		/* Delay of 300ms for showing tap/click animations before showing preloader */
+		opacity: 0;
+		animation: fadein .2s; 
+		animation-delay: .3s; 
+		animation-fill-mode: forwards; 
+		animation-iteration-count: .5;
+	}
+	.landing.-preloader .landing_logo { display: none; }
 
 
 .app {
@@ -111,6 +121,7 @@ html, body { margin: 0; background: var(--bg-color); font-family: var(--font-fam
 	    stroke-linecap: round;
 	    animation: dash 1.5s ease-in-out infinite;
 	}
+
 
 
 .modal {

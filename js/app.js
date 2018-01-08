@@ -3,45 +3,47 @@ import { Description } from '/js/components/description.js';
 import { Icons } from '/js/components/icons.js';
 
 
-const showClasses = () => {
-	return new Promise((resolve, reject) => { 
-		fetch(`${api}/classes`).then(response => response.json()).then(data => {
-			const props = data.results.map(item => {
-				item.id = item.url.match(/.?(\d+)$/)[1];
-				return item;
-			});
+const Controllers = {
+	showClasses () {
+		return new Promise((resolve, reject) => { 
+			fetch(`${api}/classes`).then(response => response.json()).then(data => {
+				const props = data.results.map(item => {
+					item.id = item.url.match(/.?(\d+)$/)[1];
+					return item;
+				});
 
-			const icons = Icons(props);
-			const events = (e) => {
-				if (e.target.classList.contains('icon')) {
-					if (e.code && e.code !== 'Enter') return;
-					const id = e.target.dataset.id;
-					App.changeState(showClass.bind(null, id), 'modal', `#classes/${id}`)
+				const icons = Icons(props);
+				const events = (e) => {
+					if (e.target.classList.contains('icon')) {
+						if (e.code && e.code !== 'Enter') return;
+						const id = e.target.dataset.id;
+						App.changeState(Controllers.showClass.bind(null, id), 'modal', `#classes/${id}`)
+					}
 				}
-			}
 
-			icons.addEventListener('click', events)
-			icons.addEventListener('keypress', events)
+				icons.addEventListener('click', events)
+				icons.addEventListener('keypress', events)
 
-			resolve(icons);
-		})	
-	});
-};
+				resolve(icons);
+			})	
+		})
+	},
 
-const showClass = (id) => { 
-	return new Promise((resolve, reject) => { 
-		fetch(`${api}/classes/${id}`).then(response => response.json()).then(data => {
-			resolve(Description(data));
-		})	
-	});
+	showClass(id) { 
+		return new Promise((resolve, reject) => { 
+			fetch(`${api}/classes/${id}`).then(response => response.json()).then(data => {
+				resolve(Description(data));
+			})	
+		});
+	},
 };
 
 
 const api = 'http://www.dnd5eapi.co/api';
 const routes = {
-	'#classes/$': showClasses,
-	'#classes/(\\d+)': showClass,
-	default: showClasses 
+	'#classes/$': Controllers.showClasses,
+	'#classes/(\\d+)': Controllers.showClass,
+	default: Controllers.showClasses 
 }
 
 const router = () => {
@@ -68,15 +70,22 @@ const App = {
 	},
 
 	changeState(controller, state = 'page', route = null) {
+		this.prevState = this.state;
+		this.state = state;
+		console.log(this.prevState, this.state);
+		
+		if (this.prevState === 'landing') {
+			this.container.appendChild(Toolbar());
+		}
+		else {
+			this.preloader.classList.add('-preloader');	
+			this.preloader.classList.remove('-hide');
+		}
+		
 		controller().then(component => {
-			if (this.state === 'landing') {
-				this.preloader.style.display = 'none';
-				this.container.appendChild(Toolbar());
-			}
-
+			this.preloader.classList.add('-hide');
 			if (this.component) this.container.removeChild(this.component);
 			if (route) history.pushState(null, null, route);
-			this.state = state;
 
 			this.component = component;
 			this.component.classList.add(`-type-${state}`);
