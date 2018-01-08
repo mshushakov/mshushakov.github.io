@@ -256,3 +256,6 @@ html, body { margin: 0; background: var(--bg-color); font-family: var(--font-fam
 	.section_table td:nth-child(3) { text-align: left; width: 100%; }
 	ol.section_list { list-style: decimal; margin-left: 16px; }
 
+
+.list { font: var(--text-main); color: var(--text-color); }
+	.list_item { border-bottom: 1px solid var(--divider-color); padding: 16px; }

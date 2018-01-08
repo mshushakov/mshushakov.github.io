@@ -1,6 +1,7 @@
 import { Toolbar } from '/js/components/toolbar.js';
 import { Description } from '/js/components/description.js';
 import { Icons } from '/js/components/icons.js';
+import { List } from '/js/components/list.js';
 
 
 const Controllers = {
@@ -36,6 +37,14 @@ const Controllers = {
 			})	
 		});
 	},
+
+	showMonsters() { 
+		return new Promise((resolve, reject) => { 
+			fetch(`${api}/monsters`).then(response => response.json()).then(data => {
+				resolve(List(data.results));
+			})	
+		});
+	}
 };
 
 
@@ -43,6 +52,7 @@ const api = 'http://www.dnd5eapi.co/api';
 const routes = {
 	'#classes(/{0,1})$': Controllers.showClasses,
 	'#classes/(\\d+)': Controllers.showClass,
+	'#monsters(/{0,1})$': Controllers.showMonsters,
 	default: Controllers.showClasses 
 }
 
