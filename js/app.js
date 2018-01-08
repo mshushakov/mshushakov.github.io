@@ -70,10 +70,10 @@ const App = {
 		//TODO: to think how to manage events inside of a compound
 		const events = (e) => {
 			if (e.target.classList.contains('toolbar_icons')) {
-				if (this.state === 'modal') history.back();
+				App.changeState(Controllers.showClasses, 'page', `#classes/`)
 			}
 		}
-		
+
 		this.toolbar.addEventListener('click', events)
 		
 		this.changeState(router());

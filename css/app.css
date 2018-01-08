@@ -57,7 +57,7 @@ html, body { margin: 0; background: var(--bg-color); font-family: var(--font-fam
 
 /* Comnonents */
 .landing {
-	position: absolute;
+	position: fixed;
 	display: flex;
 	align-items: center;
 	text-align: center;
