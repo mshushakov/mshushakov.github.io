@@ -1,9 +1,10 @@
 :root {
 	--text-font: Roboto, sans-serif;
 	--text-color: rgba(0, 0, 0, .87);
-	--text-main: 14px/24px var(--text-font);
+	--text-main: 300 14px/24px var(--text-font);
+	--text-main-highlight: 400 14px/24px var(--text-font);
 	--text-headline: 300 21px/24px var(--text-font);
-	--text-subheadline: 300 16px/24px var(--text-font);
+	--text-subheadline: 400 16px/24px var(--text-font);
 	--text-toolbar: 20px/24px var(--text-font);
 	--text-small: 300 13px/18px var(--text-font);
 	
@@ -199,7 +200,7 @@ html, body { margin: 0; background: var(--bg-color); font-family: var(--font-fam
 
 	.icon_caption {
 		text-align: center;
-		font: var(--text-main);
+		font: var(--text-main-highlight);
 		pointer-events: none;
 	} 
 
@@ -221,18 +222,18 @@ html, body { margin: 0; background: var(--bg-color); font-family: var(--font-fam
 	.content_header { display: flex; padding: 16px; border-bottom: 1px solid var(--divider-color); }
 	.content_header-icon { width: 116px; }
 	.content_header-icon .icon { width: 100px; max-width: none; padding: 0; }
-	.content_header-caption { font: var(--text-main); }
+	.content_header-caption { font: var(--text-main-highlight); }
 	.content_header-title { font: var(--text-headline); margin: 8px 0 0; }
 
 
 .section { border-bottom: 1px solid var(--divider-color); padding: 0 16px 8px; }
 	.section_title { font: var(--text-subheadline); margin: 16px 0 4px; }
-	.section_subtitle { font: bold var(--text-main); margin: 16px 0 4px; }
+	.section_subtitle { font: var(--text-main-highlight); margin: 16px 0 4px; }
 	.section_list { margin: 4px 0 8px; padding: 0; list-style: none; }
 	.section_list-item { padding: 0; }
 	.section_table { border-collapse: collapse; table-layout: fixed; }
 	.section_table th, .section_table td { padding: 8px 16px 8px 0; text-align: left; vertical-align: top; }
-	.section_table th { font: var(--text-main); padding-top: 4px; }
+	.section_table th { font: var(--text-main-highlight); padding-top: 4px; }
 	.section_table td { text-align: center; font: var(--text-small); }
 	.section_table tr:nth-child(even) { background: var(--bg-color) }
 	.section_table td:nth-child(3) { text-align: left; width: 100%; }
