@@ -92,7 +92,6 @@ const App = {
 
 	changeState(controller, state = 'page', route = null) {
 		this.prevState = this.state;
-		this.state = state;
 		
 		if (this.prevState === 'landing') {
 			this.container.appendChild(this.toolbar);
@@ -107,6 +106,7 @@ const App = {
 			if (this.component) this.container.removeChild(this.component);
 			if (route) history.pushState(null, null, route);
 
+			this.state = state;
 			this.component = component;
 			this.component.classList.add(`-type-${state}`);
 			this.container.appendChild(component);
