@@ -1,4 +1,6 @@
 import { Toolbar } from '/js/components/toolbar.js';
+import { Navigation } from '/js/components/navigation.js';
+
 import { Description } from '/js/components/description.js';
 import { Icons } from '/js/components/icons.js';
 import { List } from '/js/components/list.js';
@@ -62,7 +64,7 @@ const router = () => {
 	for (const route in routes) {
 		const params = hash.match(new RegExp(route));
 		if (!params) continue;
-		params.shift(); //first item of `match` is router string
+		params.shift(); //first item of the `match` is the whole url string
 		return routes[route].bind(null, ...params);
 	}
 
@@ -76,15 +78,26 @@ const App = {
 		this.container = document.querySelector('.app');
 		this.preloader = document.querySelector('.landing');
 		this.toolbar = Toolbar({ title: 'Dungeons & Dragons' });
+		this.navigation = Navigation();
 
 		//TODO: to think how to manage events inside of a compound
 		const events = (e) => {
-			if (e.target.classList.contains('toolbar_icons')) {
+			if (e.target.classList.contains('-icon-menu')) {
+				this.navigation.classList.add('-opened');
+			}
+			if (e.target.classList.contains('navigation')) {
+				this.navigation.classList.remove('-opened');
+			}
+			if (e.target.classList.contains('navigation_link')) {
+				this.navigation.classList.remove('-opened');
+			}
+			if (e.target.classList.contains('-icon-back')) {
 				App.changeState(Controllers.showClasses, 'page', `#classes/`)
 			}
 		}
 
 		this.toolbar.addEventListener('click', events)
+		this.navigation.addEventListener('click', events)
 		
 		this.changeState(router());
 		window.addEventListener('popstate', () => this.changeState(router()))
@@ -95,6 +108,7 @@ const App = {
 		
 		if (this.prevState === 'landing') {
 			this.container.appendChild(this.toolbar);
+			this.container.appendChild(this.navigation);
 		}
 		else {
 			this.preloader.classList.add('-preloader');	

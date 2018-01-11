@@ -103,8 +103,9 @@ html, body { margin: 0; background: var(--bg-color); font-family: var(--font-fam
     z-index: 1;
     animation: fadein .4s;
 }
-	.toolbar_icons { margin-right: 10px; width: 24px; height: 24px; padding: 7px; position: relative; outline: none; }
-	.toolbar_icons svg { color: currentColor; vertical-align: top; display: none; pointer-events: none; }
+	.toolbar_icons { margin-right: 10px; position: relative; outline: none; }
+	.toolbar_icon { display: none; width: 24px; height: 24px; padding: 7px; }
+	.toolbar_icon svg { color: currentColor; vertical-align: top; pointer-events: none; }
 	.toolbar_title { font: var(--text-toolbar); text-overflow: ellipsis; overflow: hidden; white-space: nowrap; margin: 0; }
 	
 	.toolbar_icons-wave { 
@@ -140,12 +141,49 @@ html, body { margin: 0; background: var(--bg-color); font-family: var(--font-fam
 	    animation: dash 1.5s ease-in-out infinite;
 	}
 
-
-
-.modal {
-	background: #fff;
+.navigation {
+	width: calc(100% - 56px);
+	max-width: 320px;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 1;
+	pointer-events: none;
 }
+	.navigation::after {
+		content: '';
+		display: none;
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: var(--shadow-color);
+		z-index: -1;
+		animation: fadein .2s;
+	}
 
+	.navigation_drawer { 
+		font: var(--text-main);
+		background: var(--bg-color);
+		height: 100%;
+		box-shadow: 2px 0 15px var(--shadow-color);
+		overflow-y: auto;
+		transform: translate3d(calc(-100% - 56px), 0, 0);
+		transition: transform .4s;
+	}
+
+	.navigation_link { color: var(--text-color); text-decoration: none; display: block; padding: 16px; font-weight: 400; }
+	.navigation_link:hover { color: var(--primary-color) }
+	.navigation_link:active { background: rgba(0, 0, 0, .1) }
+
+	.navigation.-opened { pointer-events: auto; }
+	.navigation.-opened::after { display: block; }
+	.navigation.-opened .navigation_drawer { transform: translate3d(0, 0, 0); }
+
+
+/* Components */
 
 .icons {
 	display: flex;

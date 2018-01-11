@@ -6,7 +6,7 @@ Currently supports next routers:
 
 *	#classes/ - shows DND classes with their icons (12 symbols)
 *	#classes/:id - shows DND class description based on ID
-*	#monsters/ - shows DND mosters list
+*	#monsters/ - shows DND monsters' list
 
 Installation
 --------
@@ -27,7 +27,7 @@ TODO
 *	~~Add subclasses section on description page~~
 *	Add modal behaviour for description page to prevent calling API again when user comes back to classes page
 *	Add catching of network errors and showing notifications
-*	Add main navigation 
+*	~~Add main navigation drawer~~
 *	~~Add back button in the toolbar~~
 *	~~Add preloaders between pages and inside of modal pages~~
 *	Add animation for class icons (similar to the icons animation on Google Play)
