@@ -20,6 +20,15 @@ python -m SimpleHTTPServer 8000
 
 This SPA hosts on [mshushakov.github.io](http://mshushakov.github.io)
 
+Helpers
+--------
+
+`tools.js` contains few helpers:
+
+*	`create({string} tagName, {object} properties, ...{node} childNode(s))` - creates DOM element
+*	`createIcon({string} tagName, {object} properties, ...{node} childNode(s))` - creates SVG element
+*	`asyncrender({string} url, {function} render, {function} fail)` - creates DOM element wrapper, fetches data, adds `render` element as a childNode or call fail function
+
 
 TODO
 --------
@@ -33,3 +42,9 @@ TODO
 *	Add animation for class icons (similar to the icons animation on Google Play)
 *	Add more pages (equipment, equipment/:id, ...)
 *	Add lazy loading for images
+
+
+Progressive Rendering
+--------
+
+![Progressive Rendering](https://image.ibb.co/cuQo1m/Jan_11_2018_22_59_13.gif)
