@@ -43,6 +43,11 @@ html, body { margin: 0; background: var(--bg-color); font-family: var(--font-fam
 	to  { transform: scale(1.5); }
 }
 
+@keyframes scale2x {
+	from  { transform: scale(0); }
+	to  { transform: scale(2); }
+}
+
 @keyframes dash {
 	0% { stroke-dasharray: 1, 200; stroke-dashoffset: 0; }
 	50% { stroke-dasharray: 89, 200; stroke-dashoffset: -35px; }
@@ -175,8 +180,7 @@ html, body { margin: 0; background: var(--bg-color); font-family: var(--font-fam
 	}
 
 	.navigation_link { color: var(--text-color); text-decoration: none; display: block; padding: 16px; font-weight: 400; }
-	.navigation_link:hover { color: var(--primary-color) }
-	.navigation_link:active { background: rgba(0, 0, 0, .1) }
+	.navigation_link:active, .navigation_link:target { color: var(--primary-color) }
 
 	.navigation.-opened { pointer-events: auto; }
 	.navigation.-opened::after { display: block; }
@@ -279,6 +283,7 @@ html, body { margin: 0; background: var(--bg-color); font-family: var(--font-fam
 	.content_header-icon .icon { width: 100px; max-width: none; padding: 0; }
 	.content_header-caption { font: var(--text-main); }
 	.content_header-title { font: var(--text-headline); margin: 8px 0 0; }
+	@media (min-width: 768px) { .content { padding: 16px; } .content_header { padding: 16px 0; margin: 0 8px; } }
 
 
 .section { border-bottom: 1px solid var(--divider-color); padding: 0 16px 8px; }
@@ -293,6 +298,7 @@ html, body { margin: 0; background: var(--bg-color); font-family: var(--font-fam
 	.section_table tr:nth-child(even) { background: var(--bg-color) }
 	.section_table td:nth-child(3) { text-align: left; width: 100%; }
 	ol.section_list { list-style: decimal; margin-left: 16px; }
+	@media (min-width: 768px) { .section { padding: 0 0 8px; margin: 0 8px; } }
 
 
 .list { font: var(--text-main); color: var(--text-color); }

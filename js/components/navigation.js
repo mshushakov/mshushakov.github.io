@@ -1,15 +1,17 @@
 import { create, createIcon } from '/js/tools.js';
 
-const icons = {
-	
+const link = (url, title) => {
+	return create('a', { className: 'navigation_link', href: url, textContent: title, id: url.replace('#', '') }, 
+		create('div', { className: 'navigation_link-wave' })
+	)
 }
 
 export function Navigation(props) {
 	const element = (
 		create('div', { className: 'navigation' },
 			create('div', { className: 'navigation_drawer' },
-				create('a', { className: 'navigation_link', href: '#classes/', textContent: 'Classes' }),
-				create('a', { className: 'navigation_link', href: '#monsters/', textContent: 'Monsters' })
+				link('#classes/', 'Classes'),
+				link('#monsters/', 'Monsters'),
 			)
 		)
 	);
