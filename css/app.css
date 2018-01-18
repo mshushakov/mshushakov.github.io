@@ -194,6 +194,11 @@ html, body { margin: 0; background: var(--bg-color); font-family: var(--font-fam
 	margin: 8px;
 	flex-wrap: wrap;
 	justify-content: flex-start;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(86px, 1fr));
+	/* 3 in row for 320px screens */
+	/* 4 in row for 360px screens and higher */
+	/* 5 and more for 446px and higher screens */
 }
 
 
@@ -203,20 +208,8 @@ html, body { margin: 0; background: var(--bg-color); font-family: var(--font-fam
 	padding: 8px;
 	box-sizing: border-box;
 	color: var(--text-color);
-	flex: 1 1 86px; /* 3 in row for minimum 360px screens */
 	animation: scale .2s ease-out, fadein .2s;
 }
-
-/* TODO: maybe it can be improved */
-@media (min-width: 244px) { .icon { max-width: 50% } }
-@media (min-width: 310px) { .icon { max-width: calc(100% / 3) } }
-@media (min-width: 408px) { .icon { max-width: 25% } }
-@media (min-width: 446px) { .icon { max-width: 20% } }
-@media (min-width: 532px) { .icon { max-width: calc(100% / 6) } }
-@media (min-width: 604px) { .icon { max-width: calc(100% / 7) } }
-@media (min-width: 702px) { .icon { max-width: calc(100% / 8) } }
-@media (min-width: 790px) { .icon { max-width: calc(100% / 9) } }
-@media (min-width: 876px) { .icon { max-width: 10% } }
 
 	.icon_thumbnail { 
 		position: relative;
