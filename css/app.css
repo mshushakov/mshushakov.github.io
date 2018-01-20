@@ -124,9 +124,9 @@ html, body { margin: 0; background: var(--bg-color); font-family: var(--font-fam
 	/*.toolbar_icons:hover .toolbar_icons-wave { transform: scale(1);  }*/
 	.toolbar_icons:focus:not(:active) .toolbar_icons-wave { animation: scale2x .4s, fadeout .4s; }
 	
-	.-state-landing .-icon-menu { display: block; }
-	.-state-page  	.-icon-menu { display: block; }
-	.-state-modal 	.-icon-back { display: block; }
+	.-type-landing  .-icon-menu { display: block; }
+	.-type-page  	.-icon-menu { display: block; }
+	.-type-modal 	.-icon-back { display: block; }
 
 
 .preloader {
@@ -223,12 +223,13 @@ html, body { margin: 0; background: var(--bg-color); font-family: var(--font-fam
 	}
 
 	.icon_image, .icon_wave {
+		--scale: 0;
 		display: block;
 		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
+		top: var(--scale); 
+		bottom: var(--scale); 
+		left: var(--scale); 
+		right: var(--scale);
 	}
 
 	.icon_image {
@@ -244,10 +245,11 @@ html, body { margin: 0; background: var(--bg-color); font-family: var(--font-fam
 		transform: scale(0);
 		will-change: transform, opacity;
 		z-index: 1;
+		--scale: -15px;
 	}
 
 	.icon:focus:not(:active) .icon_wave { 
-		animation: scale2x .4s, fadeout .4s; 
+		animation: scale .4s, fadeout .4s; 
 	}
 
 	.icon_caption {
