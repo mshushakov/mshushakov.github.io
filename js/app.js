@@ -109,6 +109,7 @@ const App = {
 		if (this.prevState === 'landing') {
 			this.container.appendChild(this.toolbar);
 			this.container.appendChild(this.navigation);
+			this.container.classList.add(`-type-${this.prevState}`);
 		}
 		else {
 			this.preloader.classList.add('-preloader');	
@@ -125,8 +126,8 @@ const App = {
 			this.component.classList.add(`-type-${state}`);
 			this.container.appendChild(component);
 
-			this.container.classList.remove(`-state-${this.prevState}`);
-			this.container.classList.add(`-state-${this.state}`);
+			this.container.classList.remove(`-type-${this.prevState}`);
+			this.container.classList.add(`-type-${this.state}`);
 		});
 	},
 }
