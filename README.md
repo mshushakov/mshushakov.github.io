@@ -6,6 +6,7 @@ Currently supports next routers:
 
 *	#classes/ - shows DND classes with their icons (12 symbols)
 *	#classes/:id - shows DND class description based on ID
+*	#races/ - shows DND races' list
 *	#monsters/ - shows DND monsters' list
 
 Installation
@@ -25,9 +26,9 @@ Helpers
 
 `tools.js` contains few helpers:
 
-*	`create({string} tagName, {object} properties, ...{node} childNode(s))` - creates DOM element
-*	`createIcon({string} tagName, {object} properties, ...{node} childNode(s))` - creates SVG element
-*	`asyncrender({string} url, {function} render, {function} fail)` - creates DOM element wrapper, fetches data, adds `render` element as a childNode or call fail function
+*	`create(tagName :string, properties :object, ...childNode(s) :node)` - creates DOM element
+*	`createIcon(tagName :string, properties :object, ...childNode(s) :node)` - creates SVG element
+*	`asyncrender(url :string, render :function, fail :function)` - creates DOM element wrapper, fetches data, adds `render` element as a childNode or call fail function
 
 
 TODO
