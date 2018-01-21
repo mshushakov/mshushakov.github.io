@@ -72,11 +72,10 @@ html, body { margin: 0; background: var(--bg-color); font-family: var(--font-fam
 	left: 0;
 	right: 0;
 	background: #fff;
-	z-index: 1;
 }
 	.landing_logo { margin-bottom: 20px; }
 	.landing.-hide { display: none; }
-	.landing.-preloader { 
+	.landing { 
 		/* Delay of 300ms for showing tap/click animations before showing preloader */
 		opacity: 0;
 		animation: fadein .2s; 
@@ -84,7 +83,9 @@ html, body { margin: 0; background: var(--bg-color); font-family: var(--font-fam
 		animation-fill-mode: forwards; 
 		animation-iteration-count: .5;
 	}
-	.landing.-preloader .landing_logo { display: none; }
+	
+	.landing.-show .landing_logo { display: none; }
+	.-type-landing + .landing.-show .landing_logo { display: block; }
 
 
 .app {
@@ -297,4 +298,4 @@ html, body { margin: 0; background: var(--bg-color); font-family: var(--font-fam
 
 
 .list { font: var(--text-main); color: var(--text-color); }
-	.list_item { border-bottom: 1px solid var(--divider-color); padding: 16px; }
+	.list_item { border-bottom: 1px solid var(--divider-color); padding: 16px; display: block; }

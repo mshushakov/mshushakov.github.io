@@ -11,9 +11,8 @@ export function Icon(props) {
 		)
 	);
 	
-	if (props.id) {
-		// add id as data attrubute and make it clickble
-		element.dataset.id = props.id;
+	if (props.url) {
+		element.dataset.url = props.url;
 		element.tabIndex = 0;
 	}
 	

@@ -1,65 +1,27 @@
 import { Toolbar } from '/js/components/toolbar.js';
 import { Navigation } from '/js/components/navigation.js';
 
-import { Description } from '/js/components/description.js';
-import { Icons } from '/js/components/icons.js';
-import { List } from '/js/components/list.js';
+import { Observable } from '/js/tools.js';
+import { Controllers } from '/js/controllers.js';
 
 
-const Controllers = {
-	showClasses () {
-		return new Promise((resolve, reject) => { 
-			fetch(`${api}/classes`).then(response => response.json()).then(data => {
-				const props = data.results.map(item => {
-					item.id = item.url.match(/.?(\d+)$/)[1];
-					return item;
-				});
+const state = Observable({ 
+	title: 'Dungeons & Dragons',
+	viewType: '-type-landing', // current view type [ -landing / -page / -modal ]
+	isLoading: true, // for showing preloader
+	isNavigationOpened: false, // for showing navigation drawer
+})
 
-				const icons = Icons(props);
-				const events = (e) => {
-					if (e.target.classList.contains('icon')) {
-						if (e.code && e.code !== 'Enter') return;
-						const id = e.target.dataset.id;
-						App.changeState(Controllers.showClass.bind(null, id), 'modal', `#classes/${id}`)
-					}
-				}
-
-				icons.addEventListener('click', events)
-				icons.addEventListener('keypress', events)
-
-				resolve(icons);
-			})	
-		})
-	},
-
-	showClass(id) { 
-		return new Promise((resolve, reject) => { 
-			fetch(`${api}/classes/${id}`).then(response => response.json()).then(data => {
-				resolve(Description(data));
-			})	
-		});
-	},
-
-	showMonsters() { 
-		return new Promise((resolve, reject) => { 
-			fetch(`${api}/monsters`).then(response => response.json()).then(data => {
-				resolve(List(data.results));
-			})	
-		});
-	}
-};
-
-
-const api = 'http://www.dnd5eapi.co/api';
 const routes = {
-	'#classes(/{0,1})$': Controllers.showClasses,
+	'#classes/{0,1}$': Controllers.showClasses,
 	'#classes/(\\d+)': Controllers.showClass,
-	'#monsters(/{0,1})$': Controllers.showMonsters,
+	'#races/{0,1}$': Controllers.showRaces,
+	'#monsters/{0,1}$': Controllers.showMonsters,
 	default: Controllers.showClasses 
 }
 
-const router = () => {
-	const hash = document.location.hash;
+const router = (route) => {
+	const hash = route || document.location.hash;
 
 	for (const route in routes) {
 		const params = hash.match(new RegExp(route));
@@ -73,61 +35,51 @@ const router = () => {
 
 const App = {
 	init() {
-		this.state = 'landing'; // app state: landing or page or modal
 		this.component = null; // current component on the screen
+		this.modal = null; 	// current modal on the screen
+		this.state = state; // link to a global state;
 		this.container = document.querySelector('.app');
 		this.preloader = document.querySelector('.landing');
-		this.toolbar = Toolbar({ title: 'Dungeons & Dragons' });
-		this.navigation = Navigation();
 
-		//TODO: to think how to manage events inside of a compound
-		const events = (e) => {
-			if (e.target.classList.contains('-icon-menu')) {
-				this.navigation.classList.add('-opened');
-			}
-			if (e.target.classList.contains('navigation')) {
-				this.navigation.classList.remove('-opened');
-			}
-			if (e.target.classList.contains('navigation_link')) {
-				this.navigation.classList.remove('-opened');
-			}
-			if (e.target.classList.contains('-icon-back')) {
-				App.changeState(Controllers.showClasses, 'page', `#classes/`)
-			}
-		}
+		this.container.appendChild(Toolbar({ 
+			title: state.title, 
+			onMenuClick: () => state.isNavigationOpened = true,
+			onBackClick: () => App.changeState(Controllers.showClasses, 'page', `#classes/`),
+		}));
+		this.container.appendChild(Navigation({ 
+			isOpened: state.isNavigationOpened,
+			onClose: () => state.isNavigationOpened = false,
+		}));
 
-		this.toolbar.addEventListener('click', events)
-		this.navigation.addEventListener('click', events)
-		
+		// bind `state.viewType` as a class to the container element
+		state.viewType.subscribe(this.container, 'class');
+		// bind `state.isLoading` to the preloader element to toggle `show/hide` classes
+		state.isLoading.subscribe(this.preloader, 'class', ['-show', '-hide']);
+
+		// show modals for links with [data-url]
+		this.container.addEventListener('click', (e) => {
+			if (!e.target.dataset.url) return;
+			const url = e.target.dataset.url;
+			this.changeState(router(url), 'modal', url);
+		});
+
 		this.changeState(router());
 		window.addEventListener('popstate', () => this.changeState(router()))
 	},
 
-	changeState(controller, state = 'page', route = null) {
-		this.prevState = this.state;
+	changeState(controller, type = 'page', route = null) {
+		state.isLoading = true;
+		state.isNavigationOpened = false;
 		
-		if (this.prevState === 'landing') {
-			this.container.appendChild(this.toolbar);
-			this.container.appendChild(this.navigation);
-			this.container.classList.add(`-type-${this.prevState}`);
-		}
-		else {
-			this.preloader.classList.add('-preloader');	
-			this.preloader.classList.remove('-hide');
-		}
-		
-		controller().then(component => {
-			this.preloader.classList.add('-hide');
+		controller(this).then(component => {
 			if (this.component) this.container.removeChild(this.component);
 			if (route) history.pushState(null, null, route);
-
-			this.state = state;
+			
 			this.component = component;
-			this.component.classList.add(`-type-${state}`);
 			this.container.appendChild(component);
-
-			this.container.classList.remove(`-type-${this.prevState}`);
-			this.container.classList.add(`-type-${this.state}`);
+			
+			state.viewType = `-type-${type}`;
+			state.isLoading = false;
 		});
 	},
 }

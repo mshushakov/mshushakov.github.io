@@ -15,7 +15,7 @@ const icons = {
 
 export function Toolbar(props) {
 	const element = (
-		create('div', { className: 'toolbar' },
+		create('div', { className: 'toolbar', class: props.type },
 			create('div', { className: 'toolbar_icons', tabIndex: 0 }, 
 				icons.menu,
 				icons.back,
@@ -24,6 +24,17 @@ export function Toolbar(props) {
 			create('div', { className: 'toolbar_title', textContent: props.title })
 		)
 	);
+
+	const events = (e) => {
+		if (e.target === icons.menu) {
+			props.onMenuClick();
+		}
+		if (e.target === icons.back) {
+			props.onBackClick();		
+		}
+	};
+
+	element.addEventListener('click', events);
 
 	return element;
 }
