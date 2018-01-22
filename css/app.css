@@ -275,8 +275,8 @@ html, body { margin: 0; background: var(--bg-color); font-family: var(--font-fam
 
 .content { font: var(--text-main); color: var(--text-color); background: #fff; }
 	.content_header { display: flex; padding: 16px; border-bottom: 1px solid var(--divider-color); }
-	.content_header-image { width: 144px; opacity: .9; }
-	.content_header-image img { width: 100%; }
+	.content_header-image { padding-left: 16px; opacity: .9; }
+	.content_header-image img { height: 150px; }
 	.content_header-icon { width: 116px; }
 	.content_header-icon .icon { width: 100px; max-width: none; padding: 0; }
 	.content_header-caption { font: var(--text-main); flex-grow: 1; }
