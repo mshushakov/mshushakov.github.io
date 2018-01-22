@@ -64,6 +64,9 @@ const App = {
 			this.changeState(router(url), 'modal', url);
 		});
 
+		// add class for animation loaded images
+		document.addEventListener('load', (e) => e.target.classList.add('-loaded'), true);
+
 		this.changeState(router());
 		window.addEventListener('popstate', () => this.changeState(router()))
 	},
