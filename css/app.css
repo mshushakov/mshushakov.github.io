@@ -275,11 +275,12 @@ html, body { margin: 0; background: var(--bg-color); font-family: var(--font-fam
 
 .content { font: var(--text-main); color: var(--text-color); background: #fff; }
 	.content_header { display: flex; padding: 16px; border-bottom: 1px solid var(--divider-color); }
+	.content_header-image { width: 144px; height: 100%; object-fit: contain; opacity: .9; }
 	.content_header-icon { width: 116px; }
 	.content_header-icon .icon { width: 100px; max-width: none; padding: 0; }
-	.content_header-caption { font: var(--text-main); }
+	.content_header-caption { font: var(--text-main); flex-grow: 1; }
 	.content_header-title { font: var(--text-headline); margin: 8px 0 0; }
-	@media (min-width: 768px) { .content { padding: 16px; } .content_header { padding: 16px 0; margin: 0 8px; } }
+	@media (min-width: 768px) { .content { padding: 8px; } .content_header { padding: 16px 0; margin: 0 8px; } }
 
 
 .section { border-bottom: 1px solid var(--divider-color); padding: 0 16px 8px; }

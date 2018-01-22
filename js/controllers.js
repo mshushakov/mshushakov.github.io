@@ -1,4 +1,5 @@
-import { Description } from '/js/components/description.js';
+import { ClassDescription } from '/js/components/pages/class-description.js';
+import { RaceDescription } from '/js/components/pages/race-description.js';
 import { Icons } from '/js/components/icons.js';
 import { List } from '/js/components/list.js';
 
@@ -25,7 +26,7 @@ const Controllers = {
 		return new Promise((resolve, reject) => { 
 			fetch(`${api}/classes/${id}`).then(response => response.json()).then(data => {
 				app.state.title = `${title}: ${data.name}`;
-				resolve(Description(data));
+				resolve(ClassDescription(data));
 			})	
 		});
 	},
@@ -56,6 +57,16 @@ const Controllers = {
 
 				app.state.title = `${title}: Races`;
 				resolve(List(props));
+			})	
+		});
+	},
+
+	showRace(id, app) { 
+		return new Promise((resolve, reject) => { 
+			fetch(`${api}/races/${id}`).then(response => response.json()).then(data => {
+				app.state.title = `${title}: ${data.name}`;
+				data.image = `/races/${data.name.toLowerCase()}.png`;
+				resolve(RaceDescription(data));
 			})	
 		});
 	},
