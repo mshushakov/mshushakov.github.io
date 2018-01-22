@@ -23,7 +23,9 @@ function Description(props) {
 					create('p', { className: 'section_title', textContent: 'Racial Traits' }),
 					create('div', { textContent: extract(props.traits) }),
 				),
-				create('img', { className: 'content_header-image', src: props.image }),
+				create('div', { className: 'content_header-image' }, 
+					create('img', { src: props.image })
+				),
 			),
 			create('section', { className: 'section' },
 				create('h2', { className: 'section_title', textContent: 'Age' }),
