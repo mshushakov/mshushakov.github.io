@@ -5,8 +5,10 @@ const item = (url, title) => {
 		create('div', { className: 'list_item-wave' })
 	);
 	
-	//item.dataset.url = url;
-	//item.tabIndex = 0;
+	if (url) {
+		item.dataset.url = url;
+		item.tabIndex = 0;
+	}
 	return item;
 }
 

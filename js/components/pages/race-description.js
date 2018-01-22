@@ -4,7 +4,7 @@ const extract = (items) => items.map(item => (item.from) ? extract(item.from) : 
 
 
 function Description(props) {
-	console.log(props);
+	//console.log(props);
 	/*const choices = props.proficiency_choices.map(choices => {
 		const list = extract(choices.from);
 

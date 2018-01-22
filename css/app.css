@@ -43,11 +43,6 @@ html, body { margin: 0; background: var(--bg-color); font-family: var(--font-fam
 	to  { transform: scale(1.5); }
 }
 
-@keyframes scale2x {
-	from  { transform: scale(0); }
-	to  { transform: scale(2); }
-}
-
 @keyframes dash {
 	0% { stroke-dasharray: 1, 200; stroke-dashoffset: 0; }
 	50% { stroke-dasharray: 89, 200; stroke-dashoffset: -35px; }
@@ -77,6 +72,7 @@ img.-loaded { opacity: 1; }
 	background: #fff;
 }
 	.landing_logo { margin-bottom: 20px; }
+	.landing_logo img { opacity: 1 }
 	.landing.-hide { display: none; }
 	.landing { 
 		/* Delay of 300ms for showing tap/click animations before showing preloader */
@@ -303,4 +299,16 @@ img.-loaded { opacity: 1; }
 
 
 .list { font: var(--text-main); color: var(--text-color); }
-	.list_item { border-bottom: 1px solid var(--divider-color); padding: 16px; display: block; }
+	.list_item { border-bottom: 1px solid var(--divider-color); padding: 16px; outline: none; position: relative; overflow: hidden; }
+	.list_item-wave { 
+		position: absolute; 
+		top: 0; left: -10%;
+		width: 120%; 
+		padding-top: 120%;
+		margin-top: -50%;
+		border-radius: 50%;
+		background: rgba(0,0,0,.1); 
+		transform-origin: 50% 50%;
+		transform: scale(0)
+	}
+	.list_item:focus:not(:active) .list_item-wave { animation: scale .4s ease-out, fadeout .4s; }
