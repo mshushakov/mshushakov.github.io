@@ -45,7 +45,10 @@ const App = {
 		this.container.appendChild(Toolbar({ 
 			title: state.title, 
 			onMenuClick: () => state.isNavigationOpened = true,
-			onBackClick: () => App.changeState(Controllers.showClasses, 'page', `#classes/`),
+			onBackClick: () => {
+				if (history.state && history.state.prev) 
+					App.changeState(router(history.state.prev), 'page', history.state.prev);
+			}
 		}));
 		this.container.appendChild(Navigation({ 
 			isOpened: state.isNavigationOpened,
@@ -77,7 +80,7 @@ const App = {
 		
 		controller(this).then(component => {
 			if (this.component) this.container.removeChild(this.component);
-			if (route) history.pushState(null, null, route);
+			history.pushState({ prev: location.hash }, state.title, route);
 			
 			this.component = component;
 			this.container.appendChild(component);
