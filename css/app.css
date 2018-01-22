@@ -312,3 +312,8 @@ img.-loaded { opacity: 1; }
 		transform: scale(0)
 	}
 	.list_item:focus:not(:active) .list_item-wave { animation: scale .4s ease-out, fadeout .4s; }
+
+	@media (min-width: 1025px) { 
+		.list_item { transition: color .2s; } 
+		.list_item:hover { color: var(--primary-color); } 
+	}
