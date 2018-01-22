@@ -52,7 +52,7 @@ function Subclasses(props) {
 	)
 }
 
-export function Description(props) {
+function Description(props) {
 	props.image = props.image || Icon({ image: `/symbols/${props.name.toLowerCase()}.jpg` });
 
 	const choices = props.proficiency_choices.map(choices => {
@@ -100,3 +100,5 @@ export function Description(props) {
 
 	return element;
 }
+
+export { Description as ClassDescription }
