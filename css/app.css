@@ -278,7 +278,7 @@ img.-loaded { opacity: 1; }
 
 .content { font: var(--text-main); color: var(--text-color); background: #fff; }
 	.content_header { display: flex; padding: 16px; border-bottom: 1px solid var(--divider-color); }
-	.content_header-image { padding-left: 16px; opacity: .9; }
+	.content_header-image { flex: 0 0 140px; text-align: right; opacity: .9; }
 	.content_header-image img { height: 150px; }
 	.content_header-icon { width: 116px; }
 	.content_header-icon .icon { width: 100px; max-width: none; padding: 0; }
