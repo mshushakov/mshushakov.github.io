@@ -82,7 +82,7 @@ const App = {
 		
 		controller(this).then(component => {
 			if (this.component) this.container.removeChild(this.component);
-			history.pushState({ prev: location.hash }, state.title, route);
+			if (route) history.pushState({ prev: location.hash }, state.title, route);
 			
 			this.component = component;
 			this.container.appendChild(component);
