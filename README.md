@@ -7,7 +7,9 @@ Currently supports next routers:
 *	#classes/ - shows DND classes with their icons (12 symbols)
 *	#classes/:id - shows DND class description based on ID
 *	#races/ - shows DND races' list
+*	#races/:id - shows DND race description based on ID
 *	#monsters/ - shows DND monsters' list
+*	#monsters/:id - shows DND monster description based on ID
 
 Installation
 --------
@@ -40,8 +42,9 @@ TODO
 *	~~Add main navigation drawer~~
 *	~~Add back button in the toolbar~~
 *	~~Add preloaders between pages and inside of modal pages~~
+*	~~Add more pages (races, monsters)~~
+*	Add more pages (equipment, spells)
 *	Add animation for class icons (similar to the icons animation on Google Play)
-*	Add more pages (equipment, equipment/:id, ...)
 *	Add lazy loading for images
 
 
