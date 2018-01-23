@@ -1,5 +1,6 @@
 import { ClassDescription } from '/js/components/pages/class-description.js';
 import { RaceDescription } from '/js/components/pages/race-description.js';
+import { MonsterDescription } from '/js/components/pages/monster-description.js';
 import { Icons } from '/js/components/icons.js';
 import { List } from '/js/components/list.js';
 
@@ -42,6 +43,16 @@ const Controllers = {
 
 				app.state.title = `${title}: Monsters`;
 				resolve(List(props));
+			})	
+		});
+	},
+
+	showMonster(id, app) { 
+		return new Promise((resolve, reject) => { 
+			fetch(`${api}/monsters/${id}`).then(response => response.json()).then(data => {
+				app.state.title = `${title}: ${data.name}`;
+				//data.image = `/monsters/${data.name.toLowerCase()}.png`;
+				resolve(MonsterDescription(data));
 			})	
 		});
 	},

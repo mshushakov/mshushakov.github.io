@@ -18,6 +18,7 @@ const routes = {
 	'#races/{0,1}$': Controllers.showRaces,
 	'#races/(\\d+)': Controllers.showRace,
 	'#monsters/{0,1}$': Controllers.showMonsters,
+	'#monsters/(\\d+)': Controllers.showMonster,
 	default: Controllers.showClasses 
 }
 
@@ -46,8 +47,9 @@ const App = {
 			title: state.title, 
 			onMenuClick: () => state.isNavigationOpened = true,
 			onBackClick: () => {
-				if (history.state && history.state.prev) 
-					App.changeState(router(history.state.prev), 'page', history.state.prev);
+				(history.state && history.state.prev) ?
+					App.changeState(router(history.state.prev), 'page', history.state.prev) :
+					App.changeState(router('default'), 'page', '/');
 			}
 		}));
 		this.container.appendChild(Navigation({ 
