@@ -111,7 +111,7 @@ img.-loaded { opacity: 1; }
 	.toolbar_icons { margin-right: 10px; position: relative; outline: none; }
 	.toolbar_icon { display: none; width: 24px; height: 24px; padding: 7px; }
 	.toolbar_icon svg { color: currentColor; vertical-align: top; pointer-events: none; }
-	.toolbar_title { font: var(--text-toolbar); text-overflow: ellipsis; overflow: hidden; white-space: nowrap; margin: 0; }
+	.toolbar_title { font: var(--text-toolbar); text-overflow: ellipsis; overflow: hidden; white-space: nowrap; margin: 0 32px 0 0; }
 	
 	.toolbar_icons-wave { 
 		position: absolute; top: 0; left: 0; right: 0; bottom: 0; 
@@ -298,7 +298,7 @@ img.-loaded { opacity: 1; }
 	@media (min-width: 768px) { .section { padding: 0 0 8px; margin: 0 8px; } }
 
 
-.list { font: var(--text-main); color: var(--text-color); }
+.list { font: var(--text-main-highlight); color: var(--text-color); }
 	.list_item { border-bottom: 1px solid var(--divider-color); padding: 16px; outline: none; position: relative; overflow: hidden; }
 	.list_item-wave { 
 		position: absolute; 

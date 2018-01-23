@@ -1,5 +1,5 @@
 import { create, asyncrender } from '/js/tools.js';
-import { Icon } from '/js/components/icon.js';
+import { Icon } from '/js/components/icons.js';
 
 
 const extract = (items) => items.map(item => (item.from) ? extract(item.from) : item.name.replace('Skill: ', '')).join(', ');
