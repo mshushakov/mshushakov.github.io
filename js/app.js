@@ -93,5 +93,17 @@ const App = {
 	},
 }
 
-App.init();
+
+if ('serviceWorker' in navigator) {
+	navigator.serviceWorker.register('/sw.js').then(registration => {
+		navigator.serviceWorker.ready.then(() => App.init());
+	}, err => {
+		console.log('ServiceWorker registration failed: ', err);
+	});
+}
+else {
+	App.init();
+}
+
+
 

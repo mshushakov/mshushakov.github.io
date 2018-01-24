@@ -4,8 +4,11 @@ import { MonsterDescription } from '/js/components/pages/monster-description.js'
 import { Icons } from '/js/components/icons.js';
 import { List } from '/js/components/list.js';
 
-const api = 'http://www.dnd5eapi.co/api';
-const title = 'Dungeons & Dragons';
+const api = (location.protocol === 'https:') ? 
+	'https://cors-anywhere.herokuapp.com/http://www.dnd5eapi.co/api' :
+	'http://www.dnd5eapi.co/api';
+
+	const title = 'Dungeons & Dragons';
 
 const Controllers = {
 	showClasses(app) {
@@ -19,7 +22,7 @@ const Controllers = {
 
 				app.state.title = title;
 				resolve(Icons(props));
-			})	
+			})
 		})
 	},
 
