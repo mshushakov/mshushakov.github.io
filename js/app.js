@@ -94,7 +94,7 @@ const App = {
 }
 
 
-if ('serviceWorker' in navigator) {
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
 	navigator.serviceWorker.register('/sw.js').then(registration => {
 		navigator.serviceWorker.ready.then(() => App.init());
 	}, err => {
