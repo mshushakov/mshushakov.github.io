@@ -16,9 +16,10 @@ Currently supports next routers:
 Installation
 --------
 
-No need to install anything. It needs only webserver for static files (imports/exports in JS don't work for local files). 
+No need to install anything. It needs only webserver for static files (imports/exports in JS don't work for local files).  
 For testing PWA and Service Worker webserver should support https.
-For example: `SimpleHTTPServer` or `http-server`
+
+Simple webservers: `SimpleHTTPServer` or `http-server`
 
 ```
 python -m SimpleHTTPServer 8000
@@ -31,7 +32,7 @@ npm install -g http-server
 http-server -S
 ```
 
-This PWA hosts on [mshushakov.github.io](https://mshushakov.github.io)
+This PWA hosts on [mshushakov.github.io](https://mshushakov.github.io)  
 HTTP: [mshushakov.github.io](http://mshushakov.github.io)
 
 Helpers
