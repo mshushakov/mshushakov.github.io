@@ -35,6 +35,9 @@ const Controllers = {
 				data.subclasses.forEach((item, index, subclasses) => {
 					subclasses[index].url = `${api}/${item.url.match(/api\/(.*)$/)[1]}`
 				});
+
+				if (data.spellcasting) data.spellcasting.url = `${api}/${data.spellcasting.url.match(/api\/(.*)$/)[1]}`;
+				
 				resolve(ClassDescription(data));
 			})	
 		});

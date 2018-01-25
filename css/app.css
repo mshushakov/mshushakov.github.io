@@ -284,17 +284,18 @@ img.-loaded { opacity: 1; }
 
 
 .section { border-bottom: 1px solid var(--divider-color); padding: 0 16px 8px; }
+	.section:last-child { border-bottom: none; }
 	.section_title { font: var(--text-subheadline); margin: 16px 0 4px; }
 	.section_subtitle { font: var(--text-main-highlight); margin: 16px 0 4px; }
 	.section_list { margin: 4px 0 8px; padding: 0; list-style: none; }
-	.section_list-item { padding: 0; }
+	.section_list-item { padding: 4px 0; }
 	.section_table { border-collapse: collapse; table-layout: fixed; }
 	.section_table th, .section_table td { padding: 8px 16px 8px 0; text-align: left; vertical-align: top; }
 	.section_table th { font: var(--text-main-highlight); padding-top: 4px; }
 	.section_table td { text-align: center; font: var(--text-small); }
 	.section_table tr:nth-child(even) { background: var(--bg-color) }
 	.section_table td:nth-child(3) { text-align: left; width: 100%; }
-	ol.section_list { list-style: decimal; margin-left: 16px; }
+	ol.section_list { list-style: lower-roman; margin-left: 16px; }
 	@media (min-width: 768px) { .section { padding: 0 0 8px; margin: 0 8px; } }
 
 

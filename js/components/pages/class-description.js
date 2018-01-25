@@ -2,22 +2,27 @@ import { create, asyncrender } from '/js/tools.js';
 import { Icon } from '/js/components/icons.js';
 
 
-const extract = (items) => items.map(item => (item.from) ? extract(item.from) : item.name.replace('Skill: ', '')).join(', ');
+const extract = (items) => {
+	return items.map(item => {
+		return (item.from) ? extract(item.from) : item.name.replace('Skill: ', '')
+	}).join(', ')
+};
 
 function Equipment(props) {
 	const elements = [];
-	const equipments = props.starting_equipment.map(equipment => `${equipment.item.name} (${equipment.quantity})`).join(', ');
+	const format = (name, quantity) => name += (quantity > 1) ? ' (' + quantity + ')' : '';
+	const equipments = props.starting_equipment.map(equipment => format(equipment.item.name, equipment.quantity)).join(', ');
 	
 	for (let i = 1; i <= props.choices_to_make; i++) {
 		const choice = props['choice_' + i];
 		if (!choice) continue;
-		choice.forEach(choice => {
-			const any = (choice.choose !== choice.from.length) ? 'Any ' + choice.choose + ' from ' : ''
-			const text = any + choice.from.map(eq => {
-				return eq.item.name + `${eq.quantity > 1 ? ' (' + eq.quantity + ')' : ''}`
-			}).join(', ');
-			elements.push(create('li', { className: 'section_item' , textContent: text }));
-		})
+		const options = choice.map((choices, index) => {
+			const delimeter = (choices.from.length === 2) ? ' and ' : ', ';
+			const oneFrom = (choices.from.length > 1) ? 'any from: ' : '';
+			const letter = (choice.length > 1) ? `(${String.fromCharCode(97 + index)}) ` : '';
+			return letter + oneFrom + choices.from.map(eq => format(eq.item.name, eq.quantity)).join(delimeter);
+		});
+		elements.push(create('li', { className: 'section_list-item' , textContent: options.join(', or, ') }));
 	}
 
 	return create('div', null,  
@@ -52,6 +57,17 @@ function Subclasses(props) {
 	)
 }
 
+function Spellcasting(props) {
+	return create('div', { className: 'section_list' },
+		...props.info.map(data => {
+			return create('div', null, 
+				create('h3', { className: 'section_subtitle',  textContent: data.name }),
+				create('div', { textContent: data.desc })
+			)
+		})
+	)
+}
+
 function Description(props) {
 	props.image = props.image || Icon({ image: `/symbols/${props.name.toLowerCase()}.jpg` });
 
@@ -70,14 +86,12 @@ function Description(props) {
 				create('div', { className: 'content_header-icon' }, props.image),
 				create('div', { className: 'content_header-caption' }, 
 					create('h1', { className: 'content_header-title', textContent: props.name }),
-					create('div', { textContent: `Hit Points: ${props.hit_die}` })
+					create('div', { textContent: `Hit Die: ${props.hit_die}` })
 				)
 			),
 			create('section', { className: 'section' },
 				create('h2', { className: 'section_title', textContent: 'Proficiencies' }),
-				create('ul', { className: 'section_list' },
-					...props.proficiencies.map(proficiency => create('li', { className: 'section_list-item', textContent: proficiency.name }))
-				),
+				create('p', { className: 'section_list', textContent: props.proficiencies.map(p => p.name).join(', ') }),
 				create('h2', { className: 'section_title', textContent: 'Skills' }),
 				...choices,
 				create('h2', { className: 'section_title', textContent: 'Saving Throws' }),
@@ -95,6 +109,10 @@ function Description(props) {
 				create('h2', { className: 'section_title', textContent: 'Subclasses' }),
 				...props.subclasses.map(subclass => asyncrender(subclass.url, Subclasses))
 			),
+			// create('section', { className: 'section' },
+			// 	create('h2', { className: 'section_title', textContent: 'Spellcasting' }),
+			// 	asyncrender( props.spellcasting.url.toLowerCase(), Spellcasting )
+			// ),
 		)
 	);
 
