@@ -1,6 +1,6 @@
 {
     "short_name": "D&D 5e",
-    "name": "Dungeons and Dragons The 5th Edition",
+    "name": "Dungeons and Dragons: The 5th Edition",
     "icons": [
       {
         "src": "5e_icon.png",
@@ -9,6 +9,6 @@
     ],
     "start_url": "index.html",
     "display": "standalone",
-    "theme_color": "#800",
+    "theme_color": "#ed1c24",
     "background_color": "#fafafa"
   }
