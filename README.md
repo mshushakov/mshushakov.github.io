@@ -1,5 +1,7 @@
-SPA based on http://www.dnd5eapi.co/
+SPA and PWA based on http://www.dnd5eapi.co/
 =======
+
+Supports both _http_ and _https_.
 
 Currently supports next routers:
 --------
@@ -14,14 +16,23 @@ Currently supports next routers:
 Installation
 --------
 
-No need to install anything. It needs only webserver for static files (imports/exports in JS don't work for local files).  
-For example: `SimpleHTTPServer`
+No need to install anything. It needs only webserver for static files (imports/exports in JS don't work for local files). 
+For testing PWA and Service Worker webserver should support https.
+For example: `SimpleHTTPServer` or `http-server`
 
 ```
 python -m SimpleHTTPServer 8000
 ``` 
 
-This SPA hosts on [mshushakov.github.io](http://mshushakov.github.io)
+or
+
+```
+npm install -g http-server
+http-server -S
+```
+
+This PWA hosts on [mshushakov.github.io](https://mshushakov.github.io)
+HTTP: [mshushakov.github.io](http://mshushakov.github.io)
 
 Helpers
 --------
@@ -36,6 +47,7 @@ Helpers
 TODO
 --------
 
+*	~~Add Service Worker and cache API requests for instant responsiveness of users actions~~
 *	~~Add subclasses section on description page~~
 *	Add modal behaviour for description page to prevent calling API again when user comes back to classes page
 *	Add catching of network errors and showing notifications
@@ -45,7 +57,6 @@ TODO
 *	~~Add more pages (races, monsters)~~
 *	Add more pages (equipment, spells)
 *	Add animation for class icons (similar to the icons animation on Google Play)
-*	Add lazy loading for images
 
 
 Progressive Rendering
