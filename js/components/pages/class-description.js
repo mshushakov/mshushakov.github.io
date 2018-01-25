@@ -17,10 +17,9 @@ function Equipment(props) {
 		const choice = props['choice_' + i];
 		if (!choice) continue;
 		const options = choice.map((choices, index) => {
-			const delimeter = (choices.from.length === 2) ? ' and ' : ', ';
-			const oneFrom = (choices.from.length > 1) ? 'any from: ' : '';
+			const oneFrom = (choices.from.length !== choices.choose) ? 'any from: ' : '';
 			const letter = (choice.length > 1) ? `(${String.fromCharCode(97 + index)}) ` : '';
-			return letter + oneFrom + choices.from.map(eq => format(eq.item.name, eq.quantity)).join(delimeter);
+			return letter + oneFrom + choices.from.map(eq => format(eq.item.name, eq.quantity)).join(', ');
 		});
 		elements.push(create('li', { className: 'section_list-item' , textContent: options.join(', or, ') }));
 	}
