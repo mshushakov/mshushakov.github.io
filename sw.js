@@ -5,6 +5,7 @@ self.addEventListener('install', function(event) {
         '/',
         '/css/app.css',
         '/js/app.js',
+        '/logo.png',
       ]);
     }).catch(err => console.log(err))
   );
