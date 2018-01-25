@@ -30,6 +30,11 @@ const Controllers = {
 		return new Promise((resolve, reject) => { 
 			fetch(`${api}/classes/${id}`).then(response => response.json()).then(data => {
 				app.state.title = `${title}: ${data.name}`;
+				data.starting_equipment.url = `${api}/${data.starting_equipment.url.match(/api\/(.*)$/)[1]}`;
+				data.class_levels.url = `${api}/${data.class_levels.url.match(/api\/(.*)$/)[1]}`;
+				data.subclasses.forEach((item, index, subclasses) => {
+					subclasses[index].url = `${api}/${item.url.match(/api\/(.*)$/)[1]}`
+				});
 				resolve(ClassDescription(data));
 			})	
 		});

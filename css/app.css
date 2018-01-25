@@ -272,7 +272,7 @@ img.-loaded { opacity: 1; }
 	.fragment.-loaded { animation: fadein .4s; }
 
 
-.content { font: var(--text-main); color: var(--text-color); background: #fff; }
+.content { font: var(--text-main); color: var(--text-color); background: #fff; animation: fadein .4s; }
 	.content_header { display: flex; padding: 16px; border-bottom: 1px solid var(--divider-color); }
 	.content_header-image { flex: 0 0 140px; text-align: right; opacity: .9; }
 	.content_header-image img { height: 150px; }
