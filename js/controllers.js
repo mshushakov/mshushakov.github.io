@@ -85,11 +85,28 @@ const Controllers = {
 
 	showRace(id, app) { 
 		return new Promise((resolve, reject) => { 
-			fetch(`${api}/races/${id}`).then(response => response.json()).then(data => {
-				app.state.title = `${title}: ${data.name}`;
-				data.image = `/races/${data.name.toLowerCase()}.png`;
-				resolve(RaceDescription(data));
-			})	
+			Promise.all([
+				fetch(`${api}/ability-scores`),
+				fetch(`${api}/races/${id}`),
+			])
+			.then(responses => {
+				const data = responses.map(response => response.json());
+				return Promise.all(data);
+			})
+			.then(data => {
+				const [ abilities, props ] = data;
+				props.abilities = abilities.results;
+				props.image = `/races/${props.name.toLowerCase()}.png`;
+
+				if (props.subraces) {
+					props.subraces.forEach((item, index, subraces) => {
+						subraces[index].url = `${api}/${item.url.match(/api\/(.*)$/)[1]}`
+					});
+				}
+
+				app.state.title = `${title}: ${props.name}`;
+				resolve(RaceDescription(props));
+			})
 		});
 	},
 }
