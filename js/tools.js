@@ -92,4 +92,17 @@ const Observable = (data) => {
 	})
 }
 
-export { create, createIcon, asyncrender, Observable }
+const extract = (items) => {
+	return items.map(item => {
+		return (item.from) ? extract(item.from) : item.name.replace('Skill: ', '')
+	}).join(', ')
+}
+
+const score = (types, scores) => types.reduce((output, type, index) => {
+	if (scores[index]) {
+		output.push(`${type.name} +${scores[index]}`)
+	}
+	return output;
+}, []).join(', ');
+
+export { create, createIcon, asyncrender, Observable, extract, score }
