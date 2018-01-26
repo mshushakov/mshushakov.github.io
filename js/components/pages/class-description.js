@@ -1,12 +1,5 @@
-import { create, asyncrender } from '/js/tools.js';
+import { create, asyncrender, extract } from '/js/tools.js';
 import { Icon } from '/js/components/icons.js';
-
-
-const extract = (items) => {
-	return items.map(item => {
-		return (item.from) ? extract(item.from) : item.name.replace('Skill: ', '')
-	}).join(', ')
-};
 
 function Equipment(props) {
 	const elements = [];
@@ -42,7 +35,7 @@ function Levels(props) {
 			return create('tr', null, 
 				create('td', { textContent: data.level }),
 				create('td', { textContent: '+' + data.prof_bonus }),
-				create('td', { textContent: data.features.map(feature => feature.name).join(', ') || '-' })
+				create('td', { textContent: extract(data.features) || '-' })
 			)
 		})
 	)
@@ -90,7 +83,7 @@ function Description(props) {
 			),
 			create('section', { className: 'section' },
 				create('h2', { className: 'section_title', textContent: 'Proficiencies' }),
-				create('p', { className: 'section_list', textContent: props.proficiencies.map(p => p.name).join(', ') }),
+				create('p', { className: 'section_list', textContent: extract(props.proficiencies) }),
 				create('h2', { className: 'section_title', textContent: 'Skills' }),
 				...choices,
 				create('h2', { className: 'section_title', textContent: 'Saving Throws' }),
@@ -108,12 +101,17 @@ function Description(props) {
 				create('h2', { className: 'section_title', textContent: 'Subclasses' }),
 				...props.subclasses.map(subclass => asyncrender(subclass.url, Subclasses))
 			),
-			// create('section', { className: 'section' },
-			// 	create('h2', { className: 'section_title', textContent: 'Spellcasting' }),
-			// 	asyncrender( props.spellcasting.url.toLowerCase(), Spellcasting )
-			// ),
 		)
 	);
+
+	if (props.spellcasting) {
+		element.appendChild(
+			create('section', { className: 'section' },
+				create('h2', { className: 'section_title', textContent: 'Spellcasting' }),
+				asyncrender( props.spellcasting.url.toLowerCase(), Spellcasting )
+			)
+		)
+	}
 
 	return element;
 }
