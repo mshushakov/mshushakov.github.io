@@ -6,3 +6,5 @@ node_modules/*
 .sass-cache/*
 .DS_Store
 */.DS_Store
+cert.pem
+key.pem
