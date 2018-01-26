@@ -12,7 +12,7 @@
 	--shadow-color: rgba(0, 0, 0, .26);
 	--primary-color: #ed1c24;
 	--primary-text-color: #fff;
-	--divider-color: rgba(0, 0, 0, .38);
+	--divider-color: rgba(0, 0, 0, .14);
 }
 
 html, body { margin: 0; background: var(--bg-color); font-family: var(--font-family); }
@@ -88,7 +88,7 @@ img.-loaded { opacity: 1; }
 
 
 .app {
-	padding-top: 56px;
+	padding-top: 54px;
 	margin: auto;
 	max-width: 960px;
 }
@@ -99,7 +99,7 @@ img.-loaded { opacity: 1; }
 	align-items: center;
 	background: var(--primary-color); 
 	color: var(--primary-text-color); 
-	padding: 209px 10px 9px;
+	padding: 209px 8px 9px;
 	box-shadow: 0 3px 6px var(--shadow-color);
 	position: fixed;
     top: -200px;
@@ -108,8 +108,8 @@ img.-loaded { opacity: 1; }
     z-index: 1;
     animation: fadein .4s;
 }
-	.toolbar_icons { margin-right: 10px; position: relative; outline: none; }
-	.toolbar_icon { display: none; width: 24px; height: 24px; padding: 7px; }
+	.toolbar_icons { margin-right: 8px; position: relative; outline: none; }
+	.toolbar_icon { display: none; width: 24px; height: 24px; padding: 6px; }
 	.toolbar_icon svg { color: currentColor; vertical-align: top; pointer-events: none; }
 	.toolbar_title { font: var(--text-toolbar); text-overflow: ellipsis; overflow: hidden; white-space: nowrap; margin: 0 32px 0 0; }
 	
@@ -300,7 +300,7 @@ img.-loaded { opacity: 1; }
 
 
 .list { font: var(--text-main-highlight); color: var(--text-color); }
-	.list_item { border-bottom: 1px solid var(--divider-color); padding: 16px; outline: none; position: relative; overflow: hidden; }
+	.list_item { padding: 16px; outline: none; position: relative; overflow: hidden; cursor: pointer; }
 	.list_item-wave { 
 		position: absolute; 
 		top: 0; left: -10%;
