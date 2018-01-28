@@ -1,22 +1,19 @@
 const create = (tag, props, ...children) => {
 	const element = document.createElement(tag);
+
+	if (children) children.forEach(child => {
+		if (typeof child !== 'object') return element.textContent = child;
+		if (child.nodeType) return element.appendChild(child);
+		if (child.subscribe) return props.textContent = child;
+	});
+
 	if (props) Object.keys(props).forEach(prop => {
 		if (typeof props[prop] === 'object' && props[prop].subscribe) {
 			props[prop].subscribe(element, prop, props.values);
 			return;
 		}
-
 		element[prop] = props[prop]
 	})
-	
-	if (children) children.forEach(child => {
-		if (typeof child === 'object' && child.nodeType) {
-			element.appendChild(child)
-		} else {
-			element.textContent = child;
-		}
-		
-	});
 	
 	return element;
 }
