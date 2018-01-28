@@ -9,7 +9,14 @@ const create = (tag, props, ...children) => {
 		element[prop] = props[prop]
 	})
 	
-	if (children) children.forEach(child => element.appendChild(child));
+	if (children) children.forEach(child => {
+		if (typeof child === 'object' && child.nodeType) {
+			element.appendChild(child)
+		} else {
+			element.textContent = child;
+		}
+		
+	});
 	
 	return element;
 }
