@@ -13,7 +13,6 @@ function Subraces(abilities, name, props) {
 }
 
 function Description(props) {
-	console.log(props);
 	const element = (
 		create('div', { className: 'content' },
 			create('div', { className: 'content_header' },
@@ -46,6 +45,15 @@ function Description(props) {
 			),
 		)
 	);
+
+	if (props.starting_proficiencies && props.starting_proficiencies.length) {
+		element.appendChild(
+			create('section', { className: 'section' },
+				create('h2', { className: 'section_title'}, 'Starting Proficiencies'),
+				create('p', {}, extract(props.starting_proficiencies)),
+			),
+		)
+	}
 
 	if (props.subraces && props.subraces.length) {
 		element.appendChild(
