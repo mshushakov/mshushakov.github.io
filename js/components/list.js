@@ -1,8 +1,9 @@
 import { create } from '/js/tools.js';
 
 const item = (url, title) => {
-	const item = create('div', { className: 'list_item', textContent: title },
-		create('div', { className: 'list_item-wave' })
+	const item = create('div', { className: 'list_item' },
+		title,
+		create('div', { className: 'list_item-wave' }),
 	);
 	
 	if (url) {
