@@ -13,6 +13,7 @@ export function Navigation(props) {
 				link('#classes/', 	'Classes'),
 				link('#races/', 	'Races'),
 				link('#monsters/', 	'Monsters'),
+				link('#equipment/', 'Equipment'),
 			)
 		)
 	);

@@ -77,7 +77,7 @@ const Controllers = {
 				});
 
 				app.state.title = `${title}: Races`;
-				resolve(List({ items: props, sort: true }));
+				resolve(List({ items: props }));
 			})	
 		});
 	},
@@ -108,6 +108,21 @@ const Controllers = {
 			})
 		});
 	},
+
+	showEquipment(app) {
+		return new Promise((resolve, reject) => { 
+			fetch(`${api}/equipment`).then(response => response.json()).then(data => {
+				const props = data.results.map(item => {
+					item.id = item.url.match(/.?(\d+)$/)[1];
+					item.url = null; //`#equipment/${item.id}`;
+					return item;
+				});
+
+				app.state.title = `${title}: Equipment`;
+				resolve(List({ items: data.results, sort: true, group: true }));
+			})	
+		});
+	}
 }
 
 export { Controllers }

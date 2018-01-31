@@ -19,6 +19,7 @@ const routes = {
 	'#races/(\\d+)': Controllers.showRace,
 	'#monsters/{0,1}$': Controllers.showMonsters,
 	'#monsters/(\\d+)': Controllers.showMonster,
+	'#equipment/{0,1}$': Controllers.showEquipment,
 	default: Controllers.showClasses 
 }
 
