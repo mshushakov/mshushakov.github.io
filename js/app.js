@@ -73,7 +73,8 @@ const App = {
 		document.addEventListener('load', (e) => e.target.classList.add('-loaded'), true);
 
 		this.changeState(router());
-		window.addEventListener('popstate', () => this.changeState(router()))
+		window.addEventListener('popstate', () => this.changeState(router()));
+		window.addEventListener('beforeunload', (e) => history.replaceState({ scrollTop: window.pageYOffset }, state.title));
 	},
 
 	changeState(controller, type = 'page', route = null) {
@@ -81,12 +82,20 @@ const App = {
 		state.isNavigationOpened = false;
 		
 		controller(this).then(component => {
+			let scrollTop = (history.state && history.state.scrollTop) ? history.state.scrollTop : 0;
+			if (type === 'modal') scrollTop = window.pageYOffset;
 			if (this.component) this.container.removeChild(this.component);
 			if (this.component && this.component.onunmount) this.component.onunmount();
-			if (route) history.pushState({ prev: location.hash }, state.title, route);
+			if (route) history.pushState({ prev: location.hash, scrollTop }, state.title, route);
 			
 			this.component = component;
 			this.container.appendChild(component);
+			
+			if (type === 'page' && history.state && history.state.scrollTop) {
+				window.scroll(0, history.state.scrollTop);
+			} else {
+				window.scroll(0, 0);
+			}
 			
 			state.viewType = `-type-${type}`;
 			state.isLoading = false;
