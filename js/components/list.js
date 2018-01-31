@@ -14,7 +14,7 @@ const Item = (url, title) => {
 }
 
 const Group = (caption, items) => {
-	return create('div', { className: 'list list-group' },
+	return create('div', { className: 'list-group' },
 		create('h3', { className: 'list_caption' }, caption),
 		...items.map(data => Item(data.url, data.name))
 	)
@@ -57,7 +57,7 @@ export function List(props) {
 	}
 
 	const element = (
-		create('div', { className: 'content' }, 
+		create('div', { className: 'content list' }, 
 			...items
 		)
 	);
