@@ -69,7 +69,7 @@ const App = {
 			this.changeState(router(url), 'modal', url);
 		});
 
-		// add class for animation loaded images
+		// add class for animating loaded images
 		document.addEventListener('load', (e) => e.target.classList.add('-loaded'), true);
 
 		this.changeState(router());
@@ -82,6 +82,7 @@ const App = {
 		
 		controller(this).then(component => {
 			if (this.component) this.container.removeChild(this.component);
+			if (this.component && this.component.onunmount) this.component.onunmount();
 			if (route) history.pushState({ prev: location.hash }, state.title, route);
 			
 			this.component = component;

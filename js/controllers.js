@@ -8,7 +8,7 @@ const api = (location.protocol === 'https:') ?
 	'https://cors-anywhere.herokuapp.com/http://www.dnd5eapi.co/api' :
 	'http://www.dnd5eapi.co/api';
 
-	const title = 'Dungeons & Dragons';
+const title = 'Dungeons & Dragons';
 
 const Controllers = {
 	showClasses(app) {
@@ -53,7 +53,7 @@ const Controllers = {
 				});
 
 				app.state.title = `${title}: Monsters`;
-				resolve(List(props));
+				resolve(List({ items: props, sort: true, group: true }));
 			})	
 		});
 	},
@@ -62,7 +62,6 @@ const Controllers = {
 		return new Promise((resolve, reject) => { 
 			fetch(`${api}/monsters/${id}`).then(response => response.json()).then(data => {
 				app.state.title = `${title}: ${data.name}`;
-				//data.image = `/monsters/${data.name.toLowerCase()}.png`;
 				resolve(MonsterDescription(data));
 			})	
 		});
@@ -78,7 +77,7 @@ const Controllers = {
 				});
 
 				app.state.title = `${title}: Races`;
-				resolve(List(props));
+				resolve(List({ items: props, sort: true }));
 			})	
 		});
 	},
