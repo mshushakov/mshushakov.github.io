@@ -85,7 +85,7 @@ const Observable = (data) => {
 		}
 	}, {
 		get(target, key) {
-		    return { subscribe: target.subscribe.bind(target, key) }
+		    return { subscribe: target.subscribe.bind(target, key), valueOf: () => String(data[key]) }
 		},
 
 		set(target, key, value) {
