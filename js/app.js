@@ -47,11 +47,7 @@ const App = {
 		this.container.appendChild(Toolbar({ 
 			title: state.title, 
 			onMenuClick: () => state.isNavigationOpened = true,
-			onBackClick: () => {
-				(history.state && history.state.prev) ?
-					App.changeState(router(history.state.prev), 'page', history.state.prev) :
-					App.changeState(router('default'), 'page', '/');
-			}
+			onBackClick: () => history.back(),
 		}));
 		this.container.appendChild(Navigation({ 
 			isOpened: state.isNavigationOpened,
@@ -74,7 +70,7 @@ const App = {
 		document.addEventListener('load', (e) => e.target.classList.add('-loaded'), true);
 
 		this.changeState(router());
-		window.addEventListener('popstate', () => this.changeState(router()));
+		window.addEventListener('popstate', (e) => this.changeState(router()));
 		window.addEventListener('beforeunload', (e) => history.replaceState({ scrollTop: window.pageYOffset }, state.title));
 	},
 
@@ -83,11 +79,10 @@ const App = {
 		state.isNavigationOpened = false;
 		
 		controller(this).then(component => {
-			let scrollTop = (history.state && history.state.scrollTop) ? history.state.scrollTop : 0;
-			if (type === 'modal') scrollTop = window.pageYOffset;
+			if (type === 'modal') history.replaceState({ scrollTop: window.pageYOffset }, state.title);
 			if (this.component) this.container.removeChild(this.component);
 			if (this.component && this.component.onunmount) this.component.onunmount();
-			if (route) history.pushState({ prev: location.hash, scrollTop }, state.title, route);
+			if (route) history.pushState({ prev: location.hash, type }, state.title, route);
 			
 			this.component = component;
 			this.container.appendChild(component);
