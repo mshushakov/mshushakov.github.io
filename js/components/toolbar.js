@@ -16,12 +16,14 @@ const icons = {
 export function Toolbar(props) {
 	const element = (
 		create('div', { className: 'toolbar', class: props.type },
-			create('div', { className: 'toolbar_icons', tabIndex: 0 }, 
-				icons.menu,
-				icons.back,
-				create('div', { className: 'toolbar_icons-wave' })
-			),
-			create('div', { className: 'toolbar_title', textContent: props.title })
+			create('div', { className: 'toolbar_container' },
+				create('div', { className: 'toolbar_icons', tabIndex: 0 }, 
+					icons.menu,
+					icons.back,
+					create('div', { className: 'toolbar_icons-wave' })
+				),
+				create('div', { className: 'toolbar_title', textContent: props.title })
+			)
 		)
 	);
 
