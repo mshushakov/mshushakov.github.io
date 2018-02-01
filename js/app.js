@@ -72,6 +72,8 @@ const App = {
 		this.changeState(router());
 		window.addEventListener('popstate', (e) => this.changeState(router()));
 		window.addEventListener('beforeunload', (e) => history.replaceState({ scrollTop: window.pageYOffset }, state.title));
+		// prevent page jumps when hash is changed
+		history.scrollRestoration = 'manual';
 	},
 
 	changeState(controller, type = 'page', route = null) {

@@ -109,7 +109,7 @@ img.-loaded { opacity: 1; }
     animation: fadein .4s;
 }
 	.toolbar_icons { margin-right: 8px; position: relative; outline: none; }
-	.toolbar_icon { display: none; width: 24px; height: 24px; padding: 6px; }
+	.toolbar_icon { display: none; width: 24px; height: 24px; padding: 6px; cursor: pointer; }
 	.toolbar_icon svg { color: currentColor; vertical-align: top; pointer-events: none; }
 	.toolbar_title { font: var(--text-toolbar); text-overflow: ellipsis; overflow: hidden; white-space: nowrap; margin: 0 32px 0 0; }
 	
@@ -120,9 +120,10 @@ img.-loaded { opacity: 1; }
 		transform: scale(0); 
 		border-radius: 50%;
 		pointer-events: none;
+		will-change: transform, opacity;
 	}
 	/*.toolbar_icons:hover .toolbar_icons-wave { transform: scale(1);  }*/
-	.toolbar_icons:focus:not(:active) .toolbar_icons-wave { animation: scale2x .4s, fadeout .4s; }
+	.toolbar_icons:focus .toolbar_icons-wave { animation: scale2x .4s, fadeout .4s; }
 	
 	.-type-landing  .-icon-menu { display: block; }
 	.-type-page  	.-icon-menu { display: block; }
@@ -209,6 +210,7 @@ img.-loaded { opacity: 1; }
 	box-sizing: border-box;
 	color: var(--text-color);
 	animation: scale .2s ease-out, fadein .2s;
+	cursor: pointer;
 }
 
 	.icon_thumbnail { 
@@ -280,6 +282,7 @@ img.-loaded { opacity: 1; }
 	.content_header-icon .icon { width: 100px; max-width: none; padding: 0; }
 	.content_header-caption { font: var(--text-main); flex-grow: 1; }
 	.content_header-title { font: var(--text-headline); margin: 8px 0 0; }
+	.content_header-section { font: var(--text-main-highlight); margin: 16px 0 }
 	@media (min-width: 768px) { .content { padding: 8px; } .content_header { padding: 16px 0; margin: 0 8px; } }
 
 
@@ -334,6 +337,8 @@ img.-loaded { opacity: 1; }
 		position: absolute; z-index: 1;
 		font-weight: 400; color: var(--primary-color); 
 		padding-left: 20px; 
+		height: 24px;
+		will-change: position;
 	}
 	.-fixed .list_caption { position: fixed; top: 54px; }
 	.-bottom .list_caption { bottom: 0; }
