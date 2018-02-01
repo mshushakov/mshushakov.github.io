@@ -2,6 +2,7 @@ const create = (tag, props, ...children) => {
 	const element = document.createElement(tag);
 
 	if (children) children.forEach(child => {
+		if (!child) return;
 		if (typeof child !== 'object') return element.textContent = child;
 		if (child.nodeType) return element.appendChild(child);
 		if (child.subscribe) return props.textContent = child;
@@ -85,7 +86,7 @@ const Observable = (data) => {
 		}
 	}, {
 		get(target, key) {
-		    return { subscribe: target.subscribe.bind(target, key), valueOf: () => String(data[key]) }
+		    return { subscribe: target.subscribe.bind(target, key), toString: () => String(data[key]) }
 		},
 
 		set(target, key, value) {
