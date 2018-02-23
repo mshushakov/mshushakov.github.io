@@ -1,0 +1,9 @@
+@import "./animations.css";
+
+.players { 
+    display: flex; 
+    margin: 50px auto; 
+    max-width: 800px;
+    animation: fadein .4;
+}
+.players .player { margin: 0 40px; }
