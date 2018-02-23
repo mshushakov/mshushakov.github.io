@@ -210,6 +210,7 @@ img.-loaded { opacity: 1; }
 	color: var(--text-color);
 	animation: scale .2s ease-out, fadein .2s;
 	cursor: pointer;
+	-webkit-tap-highlight-color: transparent;
 }
 
 	.icon_thumbnail { 
