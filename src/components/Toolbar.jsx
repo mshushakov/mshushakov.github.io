@@ -9,7 +9,8 @@ export default function Toolbar(props) {
                 <h1 className="toolbar_caption">{ props.caption }</h1>
                 <div className="toolbar_navigation">
                     <Link to='/posts'>News</Link>
-                    <Link to='/audio'>Music Maker</Link>
+                    <Link to='/samples'>Samples</Link>
+                    <Link to='/sequencer'>Sequencer</Link>
                 </div>
             </div>
         </header>

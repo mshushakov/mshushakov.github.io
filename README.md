@@ -1,10 +1,11 @@
-Single SPA based on create-react-app
+Simple SPA based on create-react-app
 =======
 
-Has two routs:
+It has next routs:
 
 `posts/` - showing posts from JSONPlaceholder API  (by default)      
-`audio/` - showing two buttons that start/stop audio samples
+`samples/` - showing two buttons that start/stop audio samples
+`sequencer/` - showing a sequencer of a simple song
 
 
 Installation

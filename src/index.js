@@ -10,6 +10,9 @@ import Posts from './components/Posts';
 
 import './index.css';
 
+const Samples = () => <Players />
+const Sequencer = () => <Players sequencer />
+
 const Root = () => (
     <Router>
         <div>
@@ -17,7 +20,8 @@ const Root = () => (
             <Switch>
                 <Route exact path='/' component={Posts} />
                 <Route exact path='/posts' component={Posts} />
-                <Route exact path='/audio' component={Players} />
+                <Route exact path='/samples' component={Samples} />
+                <Route exact path='/sequencer' component={Sequencer} />
             </Switch>
         </div>
     </Router>

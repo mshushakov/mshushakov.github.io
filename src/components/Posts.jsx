@@ -31,6 +31,7 @@ export default class Posts extends React.Component {
             groups: [],
             isLoading: false,
             isGrouped: false,
+            isSorted: false,
         };
 
         this.posts = [];
@@ -61,6 +62,7 @@ export default class Posts extends React.Component {
             return Object.assign({}, {
                 posts: this.posts.concat().sort((a, b) => a.title.localeCompare(b.title)),
                 isGrouped: false,
+                isSorted: true,
             });
         });
     }
@@ -76,6 +78,7 @@ export default class Posts extends React.Component {
             return Object.assign({}, {
                 groups: Object.values(groups),
                 isGrouped: true,
+                isSorted: false,
             });
         });
     }
@@ -84,7 +87,7 @@ export default class Posts extends React.Component {
         return (
             <div className="posts">
                 <div className="posts_navigation">
-                    <span className={ (!this.state.isGrouped) ? '-active' : '' } onClick={ this.sort.bind(this) }>
+                    <span className={ (this.state.isSorted) ? '-active' : '' } onClick={ this.sort.bind(this) }>
                         Sort Alphabetically
                     </span>
                     <span className={ (this.state.isGrouped) ? '-active' : '' } onClick={ this.group.bind(this) }>

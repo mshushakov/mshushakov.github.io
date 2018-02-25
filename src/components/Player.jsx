@@ -8,6 +8,8 @@ export default class Player extends React.Component {
 	static defaultProps = {
 		loop: true,
 		autoplay: false,
+		gain: 0.8,
+		sync: null,
 	}
 
 	constructor(props) {
@@ -17,12 +19,14 @@ export default class Player extends React.Component {
 		this.context = context;
 		this.source = null;
 		this.buffer = null;
+
+		this.proxy = this.props.src.match('http') ? proxy : '';
 	}
 
 	componentDidMount() {
 		this.setState({ status: 'loading' });
 
-		fetch(proxy + this.props.src)
+		fetch(this.proxy + this.props.src)
 			.then(response => response.arrayBuffer())
 			.then(arrayBuffer => context.decodeAudioData(arrayBuffer))
 			.then(audioBuffer => {
@@ -37,12 +41,21 @@ export default class Player extends React.Component {
 	}
 
 	start() {
+		const gain = context.createGain();
+		const [ bpm, bars ] = this.props.sync ? this.props.sync.split('/') : '';
+		const sync = this.props.sync ? 60 / bpm * bars - context.currentTime % (60 / bpm * bars) : 0;
+		
 		this.source = context.createBufferSource();
 		this.source.buffer = this.buffer;
-		this.source.connect(context.destination);
-		this.source.loop = true;
-		this.source.start();
-		this.setState({ status: 'playing' });
+		this.source.connect(gain);
+		this.source.loop = this.props.loop;
+		this.source.start(context.currentTime + sync);
+
+		gain.connect(context.destination);
+		gain.gain.setValueAtTime(this.props.gain, context.currentTime);
+		
+		this.setState({ status: 'sync' });
+		setTimeout(() => this.setState({ status: 'playing' }), sync * 1000)
 	}
 
 	stop() {
