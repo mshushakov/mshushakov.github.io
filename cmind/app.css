@@ -1,0 +1,82 @@
+html, body {
+	margin: 0;
+	height: 100%;
+	overflow: hidden;
+}
+
+svg {
+	display: block;
+	color: rgba(151,194,185, .5);
+	width: 100%;
+	height: 100%;
+	background: 
+		linear-gradient(to left,
+	      transparent,
+	      transparent 9px,
+	      currentColor 9px,
+	      currentColor 10px),
+		linear-gradient(to top,
+	      transparent,
+	      transparent 9px,
+	      currentColor 9px,
+	      currentColor 10px);
+	background-size: 10px 10px;
+}
+
+circle {
+	fill: rgba(231,63,63, .7);
+	transform: translateZ();
+}
+
+circle:nth-child(2) {
+	color: #F9E422;
+	stroke: #F9E422;
+}
+
+polygon {
+	stroke: #6D9DD1;
+	pointer-events: fill;
+}
+
+circle:nth-child(2), polygon {
+	fill: currentColor;
+	fill-opacity: .2;
+	pointer-events: fill;
+}
+
+circle:nth-child(0) {
+	fill: rgba(0,0,0,.1);
+}
+
+text {
+	pointer-events: none;
+	transform: translate(-23px, 26px);
+	font-size: 12px;
+	font-family: "Comic Sans MS", cursive;
+	fill: rgba(0,0,0,.7);
+}
+
+.app {
+	position: relative;
+	height: 100%;
+	max-width: 1195px;
+	padding: 1%;
+	margin: auto;
+	box-sizing: border-box;
+}
+.app-header {
+	position: absolute;
+	bottom: 2%;
+	right: 1%;
+	pointer-events: none;
+	font: bold 18px/18px Arial, sans-serif;
+	padding: 8px;
+	margin: 0;
+	color: #333;
+}
+.app-header em { 
+	font-size: 30px; 
+	font-style: normal; 
+	font-weight: normal; 
+	vertical-align: middle; 
+}
