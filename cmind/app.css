@@ -25,7 +25,7 @@ svg {
 
 circle {
 	fill: rgba(231,63,63, .7);
-	transform: translateZ();
+	transform: translateZ(1);
 }
 
 circle:nth-child(2) {
@@ -52,7 +52,7 @@ text {
 	pointer-events: none;
 	transform: translate(-23px, 26px);
 	font-size: 12px;
-	font-family: "Comic Sans MS", cursive;
+	font-family: Arial, Helvetica, sans-serif;
 	fill: rgba(0,0,0,.7);
 }
 
@@ -79,4 +79,8 @@ text {
 	font-style: normal; 
 	font-weight: normal; 
 	vertical-align: middle; 
+}
+
+.-hidden, .-hidden ~ text {
+	display: none;
 }
