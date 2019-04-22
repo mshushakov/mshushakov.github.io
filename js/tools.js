@@ -91,7 +91,7 @@ const Observable = (data) => {
 
 		set(target, key, value) {
 		    target.updateAll(key, value);
-		    data[key] = value;
+		    if (!Object.is(data[key], value)) data[key] = value;
 		    return true;
 		}
 	})

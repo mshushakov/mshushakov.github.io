@@ -15,7 +15,7 @@ const icons = {
 
 export function Toolbar(props) {
 	const element = (
-		create('div', { className: 'toolbar', class: props.type },
+		create('div', { className: 'toolbar', class: props.isModal, values: ['-type-modal', '-type-page'] },
 			create('div', { className: 'toolbar_container' },
 				create('div', { className: 'toolbar_icons', tabIndex: 0 }, 
 					icons.menu,

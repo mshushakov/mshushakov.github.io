@@ -1,4 +1,4 @@
-import { create } from '/js/tools.js';
+import { create } from '../tools.js';
 
 function Icons(props) {
 	const element = (
@@ -22,7 +22,7 @@ function Icon(props) {
 				create('img', { className: 'icon_image', src: props.image }),
 				create('div', { className: 'icon_wave' })
 			),
-			create('div', { className: 'icon_caption', textContent: props.caption })
+			create('div', { className: 'icon_caption' }, props.caption)
 		)
 	);
 	

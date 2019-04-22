@@ -7,7 +7,7 @@ import { Controllers } from '/js/controllers.js';
 
 const state = Observable({ 
 	title: 'Dungeons & Dragons',
-	viewType: '-type-landing', // current view type [ -landing / -page / -modal ]
+	isModal: false, // view mode
 	isLoading: true, // for showing preloader
 	isNavigationOpened: false, // for showing navigation drawer
 })
@@ -25,6 +25,7 @@ const routes = {
 
 const router = (route) => {
 	const hash = route || document.location.hash;
+	if (!hash) return routes['default'];
 
 	for (const route in routes) {
 		const params = hash.match(new RegExp(route));
@@ -33,7 +34,7 @@ const router = (route) => {
 		return routes[route].bind(null, ...params);
 	}
 
-	return routes['default'];
+	return routes['404'];
 }
 
 const App = {
@@ -45,17 +46,17 @@ const App = {
 		this.preloader = document.querySelector('.landing');
 
 		this.container.appendChild(Toolbar({ 
-			title: state.title, 
+			title: state.title,
+			isModal: state.isModal,
 			onMenuClick: () => state.isNavigationOpened = true,
 			onBackClick: () => history.back(),
 		}));
-		this.container.appendChild(Navigation({ 
+
+		this.container.appendChild(Navigation({
 			isOpened: state.isNavigationOpened,
 			onClose: () => state.isNavigationOpened = false,
 		}));
 
-		// bind `state.viewType` as a class to the container element
-		state.viewType.subscribe(this.container, 'class');
 		// bind `state.isLoading` to the preloader element to toggle `show/hide` classes
 		state.isLoading.subscribe(this.preloader, 'class', ['-show', '-hide']);
 
@@ -63,7 +64,10 @@ const App = {
 		this.container.addEventListener('click', (e) => {
 			if (!e.target.dataset.url) return;
 			const url = e.target.dataset.url;
-			this.changeState(router(url), 'modal', url);
+			const rect = e.target.getClientRects()[0];
+			e.target.dataset.offsetTop = rect.top;
+			e.target.dataset.offsetLeft = rect.left;
+			this.changeState(router(url), 'modal', url, e.target);
 		});
 
 		// add class for animating loaded images
@@ -76,13 +80,14 @@ const App = {
 		history.scrollRestoration = 'manual';
 	},
 
-	changeState(controller, type = 'page', route = null) {
+	async changeState(controller, type = 'page', route = null, ...params) {
 		state.isLoading = true;
 		state.isNavigationOpened = false;
-		
-		controller(this).then(component => {
+ 
+		try {
+			const component = await controller(this, ...params);
 			if (type === 'modal') history.replaceState({ scrollTop: window.pageYOffset }, state.title);
-			if (this.component) this.container.removeChild(this.component);
+			if (this.component) this.component.remove();
 			if (this.component && this.component.onunmount) this.component.onunmount();
 			if (route) history.pushState({ prev: location.hash, type }, state.title, route);
 			
@@ -95,9 +100,11 @@ const App = {
 				window.scroll(0, 0);
 			}
 			
-			state.viewType = `-type-${type}`;
+			state.isModal = (type === 'modal') ? true : false;
 			state.isLoading = false;
-		});
+		} catch(err) {
+			console.log(err);
+		}
 	},
 }
 
