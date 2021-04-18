@@ -5,7 +5,7 @@ function Subrace(props) {
 		create('h3', { className: 'section_subtitle', textContent: props.name }),
 		create('div', { textContent: extract(props['starting_proficiencies']) }),
 		create('div', { textContent: extract(props['racial_traits']) }),
-		// create('div', { textContent: score(abilities, props.ability_bonuses) }),
+		create('div', { textContent: score(props.ability_bonuses) }),
 		create('p', { className: 'section_list', textContent: props.desc })
 	)
 }
