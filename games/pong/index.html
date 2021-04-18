@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="modulepreload" href="worker.js">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+
+    <title>Games: Pong</title>
+    <style>
+      :root {
+        --main-bg-color: #2C3E50; ;
+      }
+
+    	* { padding: 0; margin: 0; }
+      html, body, canvas { background: var(--main-bg-color); }
+      html, body { height: 100vh; display: flex; justify-content: center; align-items: center; }
+
+      canvas {
+        display: block;
+        margin: 0 auto;
+        outline: 1px solid #fff;
+        background-image:
+          repeating-linear-gradient(0deg, #fffa, #fffa 10px, transparent 10px, transparent 20px);
+        background-size: 10px 700px;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+
+      .score, .prompt {
+        position: absolute;
+        font-family: 'VT323', monospace;
+        font-size: 2.4em;
+        color: #fff;
+        pointer-events: none;
+      }
+
+      .prompt {
+        background: var(--main-bg-color);
+        padding: 1.1em;
+      }
+
+      .score {
+        top: calc(50% - 350px);
+        width: 80%;
+        max-width: 1200px;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      @media (orientation: landscape) {
+        canvas {
+          max-height: min(98vh, 98vw);
+          max-width: max(98vh, 98vw);
+        }
+      }
+      @media (orientation: portrait) {
+        canvas {
+          width: 100vw;
+        }
+      }
+
+      /* ['#2c3e50', '#1abc9c', '#3498db', '#e74c3c', '#9b59b6']; */
+    </style>
+</head>
+<body>
+
+  <div class="score">
+    <div class="score-player1">0</div>
+    <div class="score-player2">0</div>
+  </div>
+
+  <!-- <div class="prompt">Press any key to start</div> -->
+
+  <canvas id="canvas" width="1400" height="800"></canvas>
+
+  <script type="module">
+    import Vector from './vector.js';
+    class Gamepad {
+      static #instance = null;
+      #dpad1 = Vector.create(0, 0);
+      #dpad2 = Vector.create(0, 0);
+      worker = null;
+
+      get dpad1() {
+        const gamepad = navigator.getGamepads()[0];
+        return gamepad ? Vector.create(gamepad.axes[1], gamepad.axes[0]) : this.#dpad1;
+      }
+
+      get dpad2() {
+        const gamepad = navigator.getGamepads()[1];
+        return gamepad ? Vector.create(gamepad.axes[1], gamepad.axes[0]) : this.#dpad1;
+      }
+
+      #init() {
+        // window.addEventListener("gamepadconnected", (e) => {
+        //   console.log("Gamepad connected from index %d: %s",
+        //     e.gamepad.index, e.gamepad.id,
+        //     e.gamepad.buttons.length, e.gamepad.axes.length);
+        //   this.#gp = e.gamepad; // navigator.getGamepads()[e.gamepad.index];
+        //   console.log(this.#gp)
+        // });
+        // window.addEventListener("gamepaddisconnected", (e) => {
+        //   console.log("Gamepad disconnected from index %d: %s",
+        //     e.gamepad.index, e.gamepad.id,
+        //     e.gamepad.buttons.length, e.gamepad.axes.length);
+        //   this.#gp = e.gamepad; // navigator.getGamepads()[e.gamepad.index];
+        //   console.log(this.#gp)
+        // });
+        window.addEventListener('keydown', (e) => {
+          if (e.key == 'd') this.#dpad1.x = 1;
+          if (e.key == 'a') this.#dpad1.x = -1;
+          if (e.key == 'w') this.#dpad1.y = -1;
+          if (e.key == 's') this.#dpad1.y = 1;
+
+          if (e.key == 'ArrowRight') this.#dpad2.x = 1;
+          if (e.key == 'ArrowLeft') this.#dpad2.x = -1;
+          if (e.key == 'ArrowUp') this.#dpad2.y = -1;
+          if (e.key == 'ArrowDown') this.#dpad2.y = 1;
+
+          this.worker.postMessage({ type: 'change______', dpad1: this.#dpad1, dpad2: this.#dpad2 });
+        }, false);
+        window.addEventListener('keyup', (e) => {
+          if (e.key == 'd') this.#dpad1.x = 0;
+          if (e.key == 'a') this.#dpad1.x = 0;
+          if (e.key == 'w') this.#dpad1.y = 0;
+          if (e.key == 's') this.#dpad1.y = 0;
+
+          if (e.key == 'ArrowRight') this.#dpad2.x = 0;
+          if (e.key == 'ArrowLeft') this.#dpad2.x = 0;
+          if (e.key == 'ArrowUp') this.#dpad2.y = 0;
+          if (e.key == 'ArrowDown') this.#dpad2.y = 0;
+
+          this.worker.postMessage({ type: 'change______', dpad1: this.#dpad1, dpad2: this.#dpad2 });
+        }, false);
+      }
+
+      static create(worker) {
+        if (this.#instance) return this.#instance;
+
+        this.#instance = new Gamepad();
+        this.#instance.worker = worker;
+        this.#instance.#init();
+        return this.#instance;
+      }
+    }
+
+    const canvas = document.getElementById("canvas");
+
+    const offscreen = canvas.transferControlToOffscreen();
+    const worker = new Worker('worker.js', { type: 'module' });
+    const gamepad = Gamepad.create(worker);
+    const config = {};
+
+    worker.postMessage({ type: 'INIT', config, canvas: offscreen }, [offscreen]);
+
+    const scorePlayer1 = document.querySelector('.score-player1');
+    const scorePlayer2 = document.querySelector('.score-player2');
+    const prompt = document.querySelector(`.prompt`);
+
+    worker.addEventListener('message', (e) => {
+      switch (e.data.type) {
+        case 'SCORE':
+          scorePlayer1.textContent = e.data.score[0];
+          scorePlayer2.textContent = e.data.score[1];
+          break;
+        case 'PAUSE':
+          if (e.data.isPaused) {
+            prompt.style.visibility = 'visible';
+            prompt.textContent = 'Pause';
+          } else {
+            prompt.style.visibility = 'hidden';
+          }
+          break;
+      }
+    });
+
+    if (window.screen.orientation.lock) {
+      window.screen.orientation.lock('portrait')
+        .catch(e => console.warn(e));
+    }
+  </script>
+
+</body>
+</html>
