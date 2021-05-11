@@ -1,9 +1,9 @@
 {
     "short_name": "Pong",
     "name": "Pong",
-    "start_url": "/",
+    "start_url": "./pong",
     "display": "fullscreen",
     "theme_color": "#2C3E50",
     "background_color": "#2C3E50",
-    "orientation": "landscape"
+    "orientation": "portrait"
   }
