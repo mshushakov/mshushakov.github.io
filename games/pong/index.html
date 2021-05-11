@@ -20,7 +20,7 @@
       }
 
     	* { padding: 0; margin: 0; }
-      html, body, canvas { background: var(--main-bg-color); }
+      html, body, canvas { background: var(--main-bg-color); transition: background-color .3s; }
       html, body { height: 100vh; display: flex; justify-content: center; align-items: center; }
 
       canvas {
@@ -148,6 +148,9 @@
         case SCORE:
           scorePlayer1.textContent = e.data.score[0];
           scorePlayer2.textContent = e.data.score[1];
+          const color = Math.floor(Math.random() * 5);
+          const colors = ['#2c3e50', '#1abc9c', '#3498db', '#e74c3c', '#9b59b6'];
+          document.documentElement.style.setProperty('--main-bg-color', colors[color]);
           break;
         case PAUSE:
           if (e.data.isPaused) {

@@ -7,7 +7,8 @@ export const SCORE = 'SCORE';
 export const CONTROLS_UPDATE = 'CONTROLS_UPDATE';
 
 const config = {
-  hitForce: 1.1, // force to speed up the ball when it hits the paddle
+  initialSpeed: 7, // the ball's speed after serving
+  hitForce: 1.05, // force to speed up the ball when it hits the paddle
   wallFriction: .1, // friction to slow down the when it hits the wall
   paddleMaxSpeed: 10, // max speed of the paddle
   paddleSpeedTransfer: .3, // percent of the paddle's speed transfered to the ball after a stroke
@@ -188,7 +189,7 @@ const render = (time) => {
 const serve = ({ player }) => {
   const max = 5;
   const min = -5;
-  const velocityX = 7;
+  const velocityX = config.initialSpeed;
   const velocityY = Math.random() * (max - min + 1) + min;
   state.serving = player;
 
