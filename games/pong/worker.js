@@ -107,7 +107,7 @@ const updateGame = (elapsedTime = 0) => {
 
   // # Paddle bouncing
   // Speed up the ball when hit the paddle
-  const inersect = (p0, p1, p2, p3) => {
+  const inersect = (p0, p1, p2, p3, ray) => {
     const A1 = p1.y - p0.y;
     const B1 = p0.x - p1.x;
     const C1 = A1 * p0.x + B1 * p0.y;
@@ -127,6 +127,10 @@ const updateGame = (elapsedTime = 0) => {
     const rx1 = (intersetX - p2.x) / (p3.x - p2.x);
     const ry1 = (intersetY - p2.y) / (p3.y - p2.y);
 
+    if (ray) {
+      return { x: intersetX, y: intersetY }
+    }
+
     if (((rx0 >= 0 && rx0 <= 1) || (ry0 >= 0 && ry0 <= 1)) &&
         ((rx1 >= 0 && rx1 <= 1) || (ry1 >= 0 && ry1 <= 1))) {
       return { x: intersetX, y: intersetY }
@@ -138,6 +142,11 @@ const updateGame = (elapsedTime = 0) => {
   rect1.x = rect1.x + rect1.width;
   const inersectPoint1 = inersect(ball.position, next, rect1, { x: rect1.x, y: rect1.y + rect1.height });
   const inersectPoint2 = inersect(ball.position, next, rect2, { x: rect2.x, y: rect2.y + rect2.height });
+
+  const i = inersect(ball.position, next, { x: 0, y: 0 }, { x: 0, y: ctx.canvas.height }, true);
+  if (entities[1].position.y > i.y + 10) entities[1].velocity.y = -10;
+  else if (entities[1].position.y < i.y - 10) entities[1].velocity.y = 10;
+  entities[1].position.addTo(entities[1].velocity);
 
   if (inersectPoint1) {
     ball.position.x = inersectPoint1.x + ball.r;
