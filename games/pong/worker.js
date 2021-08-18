@@ -229,6 +229,11 @@ self.addEventListener('message', (e) => {
     case PAUSE:
       return pause();
     case CONTROLS_UPDATE:
-      return updateControls({ dpad1: e.data.dpad1, dpad2: e.data.dpad2 });
+      const { dpad1, dpad2, offset } = e.data;
+      if (offset) {
+        entities[2].position.y = state.ctx.canvas.height - offset;
+        return;
+      }
+      return updateControls({ dpad1, dpad2 });
   }
 });

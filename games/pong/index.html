@@ -21,7 +21,7 @@
 
     	* { padding: 0; margin: 0; }
       html, body, canvas { background: var(--main-bg-color); transition: background-color .3s; }
-      html, body { height: 100vh; display: flex; justify-content: center; align-items: center; }
+      html, body { height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
 
       canvas {
         grid-column: 1;
@@ -81,11 +81,22 @@
           max-width: max(98vh, 98vw);
         }
       }
+
       @media (orientation: portrait) {
         .game, canvas {
           width: 99vw;
         }
+
+        canvas {
+          transform: rotate(90deg) scale(1.2) translateX(-5vh);
+        }
       }
+
+      /* @media (hover: none) and (pointer: coarse) {
+        canvas {
+          transform: rotate(90deg);
+        }
+      } */
 
       /* ['#2c3e50', '#1abc9c', '#3498db', '#e74c3c', '#9b59b6']; */
     </style>
@@ -131,8 +142,20 @@
     worker.postMessage({ type: INIT, config, canvas: offscreen }, [offscreen]);
 
     window.addEventListener('gamepadupdated', (e) => {
-      const { dpad1, dpad2 } = e.detail;
-      worker.postMessage({ type: CONTROLS_UPDATE, dpad1, dpad2 });
+      const { dpad1, dpad2, touches } = e.detail;
+      let offset = null;
+      if (touches[0]) {
+        const { left, right } = canvas.getBoundingClientRect();
+        offset = touches[0] - left;
+        if (offset > right - left) {
+          offset = right - left;
+        }
+        if (offset < 0) {
+          offset = 0;
+        }
+        offset = canvas.height / (right - left) * offset;
+      }
+      worker.postMessage({ type: CONTROLS_UPDATE, dpad1, dpad2, offset });
     });
 
     window.addEventListener("gamepadconnected", () => {

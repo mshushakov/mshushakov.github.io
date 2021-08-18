@@ -1,11 +1,12 @@
 export default class Gamepad {
   dpad1 = [0, 0];
   dpad2 = [0, 0];
+  touches = [];
 
   init() {
     const scanGamepadsState = () => {
       const gamepads = navigator.getGamepads();
-      const { dpad1, dpad2 } = this;
+      const { dpad1, dpad2, touches } = this;
 
       if (gamepads[0]) {
         if (gamepads[0].id.includes('Joy-Con (L)')) {
@@ -33,7 +34,7 @@ export default class Gamepad {
         }
       }
 
-      const event = new CustomEvent('gamepadupdated', { detail: { dpad1, dpad2 }});
+      const event = new CustomEvent('gamepadupdated', { detail: { dpad1, dpad2, touches }});
       dispatchEvent(event);
       requestAnimationFrame(scanGamepadsState);
     };
@@ -61,21 +62,22 @@ export default class Gamepad {
       if (e.key == 'ArrowDown') dpad2[1] = 0;
     }, false);
 
-    // let cy = 0;
-    // window.addEventListener('touchstart', (e) => {
-    //   // console.log(e.touches[0].clientX, e.touches[1]);
-    //   cy = e.touches[0].clientY;
-    // }, false);
-    // window.addEventListener('touchend', (e) => {
-    //   const { dpad1, dpad2 } = this;
-    //   dpad2[1] = 0;
-    // }, false);
-    // // el.addEventListener('touchcancel', handleCancel, false);
-    // window.addEventListener('touchmove', (e) => {
-    //   const { dpad1, dpad2 } = this;
-    //   const dy = cy - e.targetTouches[0].clientY;
-    //   dpad2[1] = dy / 170 * -1;
-    // }, false);
+    window.addEventListener('touchstart', (e) => {
+      const { touches } = this;
+      touches[0] = e.touches[0].clientX;
+    }, false);
+    window.addEventListener('touchend', (e) => {
+      const { touches } = this;
+      touches[0] = null;
+    }, false);
+    window.addEventListener('touchcancel', (e) => {
+      const { touches } = this;
+      touches[0] = null;
+    }, false);
+    window.addEventListener('touchmove', (e) => {
+      const { touches } = this;
+      touches[0] = e.touches[0].clientX;
+    }, false);
 
     scanGamepadsState();
   }
