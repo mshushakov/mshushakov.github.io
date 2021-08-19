@@ -1,0 +1,95 @@
+:root {
+  --main-bg-color: #2C3E50; ;
+}
+
+* { padding: 0; margin: 0; }
+
+html, body {
+  height: 100%;
+  background: var(--main-bg-color);
+  transition: background-color .3s;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+canvas {
+  display: block;
+  margin: 0 auto;
+  outline: 1px solid #fff;
+  background-image:
+    repeating-linear-gradient(0deg, #fffa, #fffa 1%, transparent 1%, transparent 2%);
+  background-size: min(1%, 5px) min(100%, 700px);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.gui {
+  position: absolute;
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+}
+
+.score, .prompt, .status {
+  font-family: 'VT323', monospace;
+  font-size: 2.4rem;
+  color: #fff;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.prompt {
+  grid-column: 1;
+  grid-row: 2;
+  align-self: center;
+  justify-self: center;
+  background: var(--main-bg-color);
+  padding: 1.1rem;
+}
+
+.status {
+  grid-column: 1;
+  grid-row: 3;
+  align-self: end;
+  justify-self: end;
+  font-size: 1.4rem;
+  padding: 2%;
+}
+
+.score {
+  grid-column: 1;
+  grid-row: 1;
+  font-size: 2.4rem;
+  justify-self: center;
+  display: flex;
+  position: relative;
+  top: 2rem;
+}
+
+@media (orientation: landscape) {
+  .gui, canvas { max-width: 98vw; max-height: 98vh; }
+  .gui { aspect-ratio: 7 / 4; width: 98vw; }
+}
+
+@media (orientation: portrait) {
+  canvas { max-width: 98vh; max-height: 98vw; transform: rotate(90deg); }
+  .gui { aspect-ratio: 4 / 7; width: 98vw; }
+}
+
+/* More space for touch events on mobile devices */
+@media (hover: none) and (pointer: coarse) and (orientation: landscape) {
+  canvas { max-width: 75vw; max-height: 75vh;}
+  .gui { width: 75vw; }
+  .score { top: -2rem; font-size: 1.4rem; }
+}
+@media (hover: none) and (pointer: coarse) and (orientation: portrait) {
+  canvas { max-width: 75vh; max-height: 75vw;}
+  .gui { width: 75vw; }
+  .score { top: -2rem; font-size: 1.4rem; }
+}
+
+/* Background colors: */
+/* ['#2c3e50', '#1abc9c', '#3498db', '#e74c3c', '#9b59b6']; */
