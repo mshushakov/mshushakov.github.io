@@ -79,6 +79,7 @@ canvas {
   canvas { max-width: 75vh; max-height: 75vw; transform: rotate(90deg); }
   .gui { aspect-ratio: 4 / 7; width: 75vw; }
   /* .gui { aspect-ratio: 4 / 7; width: 98vw; } */
+  .score { top: -2rem; font-size: 1.4rem; }
 }
 
 /* More space for touch events on mobile devices */
