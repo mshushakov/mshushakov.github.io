@@ -1,7 +1,7 @@
 {
     "short_name": "Pong",
     "name": "Pong",
-    "start_url": "./pong",
+    "start_url": "/games/pong",
     "display": "fullscreen",
     "theme_color": "#2C3E50",
     "background_color": "#2C3E50",

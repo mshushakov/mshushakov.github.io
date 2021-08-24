@@ -20,7 +20,7 @@
   <canvas width="1400" height="800"></canvas>
 
   <div class="gui">
-    <div class="score">0 : 0</div>
+    <div class="score">00 : 00</div>
     <div class="prompt">Loading...</div>
     <div class="status"></div>
   </div>
@@ -48,8 +48,6 @@
         status.style.visibility = 'hidden';
       }, 3000)
     }
-
-    worker.postMessage({ type: INIT, config, canvas: offscreen }, [offscreen]);
 
     window.addEventListener('gamepadupdated', (e) => {
       const { dpad1, dpad2, touches } = e.detail;
@@ -79,7 +77,7 @@
     worker.addEventListener('message', (e) => {
       switch (e.data.type) {
         case SCORE:
-          score.textContent = `${e.data.score[0]} : ${e.data.score[1]}`;
+          score.textContent = `${String(e.data.score[0]).padStart(2, 0)} : ${String(e.data.score[1]).padStart(2, 0)}`;
           const color = Math.floor(Math.random() * 5);
           const colors = ['#2c3e50', '#1abc9c', '#3498db', '#e74c3c', '#9b59b6'];
           document.documentElement.style.setProperty('--main-bg-color', colors[color]);
@@ -94,6 +92,8 @@
           break;
       }
     });
+
+    worker.postMessage({ type: INIT, config, canvas: offscreen }, [offscreen]);
 
     window.addEventListener('keypress', (e) => {
       if (e.code === 'Space') {

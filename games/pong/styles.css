@@ -22,7 +22,7 @@ canvas {
   outline: 1px solid #fff;
   background-image:
     repeating-linear-gradient(0deg, #fffa, #fffa 1%, transparent 1%, transparent 2%);
-  background-size: min(1%, 5px) min(100%, 700px);
+  background-size: min(1%, 5px) min(100%, 100%);
   background-repeat: no-repeat;
   background-position: center;
 }
@@ -31,6 +31,7 @@ canvas {
   position: absolute;
   display: grid;
   grid-template-rows: repeat(3, 1fr);
+  width: 100%;
 }
 
 .score, .prompt, .status {
@@ -65,25 +66,22 @@ canvas {
   font-size: 2.4rem;
   justify-self: center;
   display: flex;
-  position: relative;
-  top: 2rem;
+  padding-top: 1rem;
 }
 
 @media (orientation: landscape) {
-  .gui, canvas { max-width: 98vw; max-height: 98vh; }
-  .gui { aspect-ratio: 7 / 4; width: 98vw; }
+  /* .gui, canvas { max-width: 98vw; max-height: 98vh; } */
+  canvas { max-width: 90vw; max-height: 90vh; aspect-ratio: 7 / 4; }
+  .gui { aspect-ratio: 7 / 4; max-width: 90vw; max-height: 90vh; }
 }
 
 @media (orientation: portrait) {
-  /* canvas { max-width: 98vh; max-height: 98vw; transform: rotate(90deg); } */
-  canvas { max-width: 75vh; max-height: 75vw; transform: rotate(90deg); }
-  .gui { aspect-ratio: 4 / 7; width: 75vw; }
-  /* .gui { aspect-ratio: 4 / 7; width: 98vw; } */
-  .score { top: -2rem; font-size: 1.4rem; }
+  canvas { max-width: 75vh; max-height: 75vw; transform: rotate(90deg); aspect-ratio: 7 / 4; }
+  .gui { aspect-ratio: 4 / 7; width: 100vw; max-height: 100vh; }
 }
 
 /* More space for touch events on mobile devices */
-@media (hover: none) and (pointer: coarse) and (orientation: landscape) {
+/* @media (hover: none) and (pointer: coarse) and (orientation: landscape) {
   canvas { max-width: 75vw; max-height: 75vh;}
   .gui { width: 75vw; }
   .score { top: -2rem; font-size: 1.4rem; }
@@ -92,7 +90,7 @@ canvas {
   canvas { max-width: 75vh; max-height: 75vw;}
   .gui { width: 75vw; }
   .score { top: -2rem; font-size: 1.4rem; }
-}
+} */
 
 /* Background colors: */
 /* ['#2c3e50', '#1abc9c', '#3498db', '#e74c3c', '#9b59b6']; */
